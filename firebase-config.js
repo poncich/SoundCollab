@@ -5,14 +5,13 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD1qQZclFtl-zARTf4w3qckygmXvo8Ld9w",
-  authDomain: "soundcollab-fe59d.firebaseapp.com",
-  projectId: "soundcollab-fe59d",
-  storageBucket: "soundcollab-fe59d.firebasestorage.app",
-  messagingSenderId: "892512826880",
-  appId: "1:892512826880:web:a346ee418fe79aab2f4ae5"
+  apiKey: "AIzaSyD1qQzC1fL...", // ← 39+ символов
+  authDomain: "soundcollab-fes9d.firebaseapp.com",
+  projectId: "soundcollab-fes9d",
+  storageBucket: "soundcollab-fes9d.appspot.com",
+  messagingSenderId: "892512826888",
+  appId: "1:892512826888:web:abcdef1234567890abcdef"
 };
 
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Инициализация Firebase 8
+firebase.initializeApp(firebaseConfig);
