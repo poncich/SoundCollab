@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>SoundCollab - Панель управления</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f7fa; }
+        .header { background: white; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; }
+        .logo { font-size: 24px; font-weight: bold; color: #667eea; }
+        .content { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .welcome { text-align: center; margin-bottom: 40px; }
+        .projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .project-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        .new-project { border: 2px dashed #ddd; text-align: center; color: #667eea; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">SoundCollab</div>
+        <button onclick="logout()" style="padding: 10px 20px; background: #ff6b6b; color: white; border: none; border-radius: 6px; cursor: pointer;">
+            Выйти
+        </button>
+    </div>
+    
+    <div class="content">
+        <div class="welcome">
+            <h1 id="welcomeText">Добро пожаловать!</h1>
+            <p>Начните создавать музыку</p>
+        </div>
+        
+        <div class="projects">
+            <div class="project-card new-project" onclick="createProject()">
+                <h3>+ Новый проект</h3>
+                <p>Создайте музыкальный проект</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="firebase-simple.js"></script>
+    
+    <script>
+        // Проверка авторизации
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('welcomeText').textContent = `Привет, ${user.displayName || user.email}!`;
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+        
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+        
+        function createProject() {
+            alert('Функция создания проекта скоро будет доступна!');
+        }
+    </script>
+</body>
+</html>
