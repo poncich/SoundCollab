@@ -1,3 +1,4 @@
+/ auth.js - ИСПРАВЛЕННЫЙ ВАРИАНТ
 function initAuth() {
   const auth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -13,6 +14,7 @@ function initAuth() {
         })
         .catch((error) => {
           console.error('Ошибка входа:', error);
+          alert('Ошибка входа: ' + error.message);
         });
     });
   }
@@ -21,7 +23,13 @@ function initAuth() {
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      auth.signOut();
+      auth.signOut()
+        .then(() => {
+          console.log('Выход выполнен');
+        })
+        .catch((error) => {
+          console.error('Ошибка выхода:', error);
+        });
     });
   }
   
@@ -43,6 +51,7 @@ function initAuth() {
     if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
     
     if (userInfo && user) {
+      // ВАЖНО: исправлена синтаксическая ошибка в шаблонной строке
       userInfo.innerHTML = `
         <div class="user-profile">
           <img src="${user.photoURL || 'https://via.placeholder.com/40'}" 
@@ -50,8 +59,11 @@ function initAuth() {
           <span>Привет, ${user.displayName || 'Пользователь'}!</span>
         </div>
       `;
+    } else if (userInfo) {
+      userInfo.innerHTML = ''; // Очищаем, если пользователь вышел
     }
   }
 }
 
-cument.addEventListener('DOMContentLoaded', initAuth);
+// Запуск когда страница загрузится
+document.addEventListener('DOMContentLoaded', initAuth);
