@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Firebase Debug</h2>
+    <button onclick="testAuth()">Тест авторизации</button>
+    <div id="result"></div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+    // Твой конфиг из firebase-config.js
+    const firebaseConfig = {
+        apiKey: "AIzaSyD1qQzC1fL...",
+        authDomain: "soundcollab-fes9d.firebaseapp.com",
+        projectId: "soundcollab-fes9d",
+        storageBucket: "soundcollab-fes9d.appspot.com",
+        messagingSenderId: "892512826888",
+        appId: "1:892512826888:web:a346ee418fe79aab2f4ae5"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    
+    function testAuth() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('email');
+        
+        // Пробуем оба метода
+        firebase.auth().signInWithPopup(provider)
+            .then(r => document.getElementById('result').innerHTML = 
+                '✅ POPUP: Успех! ' + r.user.email)
+            .catch(e => {
+                console.log('Popup error:', e);
+                // Если popup не работает, пробуем redirect
+                firebase.auth().signInWithRedirect(provider);
+            });
+    }
+    
+    // Обработка redirect результата
+    firebase.auth().getRedirectResult().then(result => {
+        if (result.user) {
+            document.getElementById('result').innerHTML = 
+                '✅ REDIRECT: Успех! ' + result.user.email;
+        }
+    });
+    </script>
+</body>
+</html>
