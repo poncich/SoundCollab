@@ -3,75 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoundCollab - Создавай музыку вместе с AI</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SoundCollab - Создавайте музыку вместе с AI</title>
+    <style>
+        /* Базовые стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        /* Секция авторизации */
+        .auth-section {
+            padding: 60px 20px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        
+        .auth-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            font-weight: bold;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .auth-form h3 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        
+        .auth-form input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .auth-form input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .auth-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: transform 0.3s;
+        }
+        
+        .auth-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .auth-link {
+            color: #667eea;
+            cursor: pointer;
+            margin-top: 15px;
+            text-decoration: underline;
+            display: block;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero {
+                padding: 40px 15px;
+            }
+            
+            .auth-container {
+                margin: 0 15px;
+            }
+            
+            header {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <!-- Шапка -->
     <header>
         <div class="logo">SoundCollab</div>
         <nav>
             <div id="user-info" class="user-info"></div>
-            <button id="google-login-btn" class="google-login-btn">
-                <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google">
-                Войти через Google
-            </button>
-            <button id="logout-btn" class="logout-btn" style="display: none;">
+            <button id="logout-btn" class="logout-btn" style="display: none; padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer;">
                 Выйти
             </button>
         </nav>
     </header>
-    
+
+    <!-- Главный экран -->
     <main>
         <section class="hero">
-            <h1>Создавай музыку вместе с AI и друзьями</h1>
+            <h1>Создавайте музыку вместе с AI и друзьями</h1>
             <p>Простая платформа для коллаборации</p>
             <button id="main-action-btn" class="cta-button">Попробовать бесплатно</button>
-            
-            <div class="demo-section">
-                <h2>Как это работает?</h2>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <h3>Войди через Google</h3>
-                        <p>Быстрая регистрация за 2 клика</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <h3>Создай проект</h3>
-                        <p>Добавь аудио или сгенерируй с помощью AI</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <h3>Пригласи друзей</h3>
-                        <p>Работайте над треком вместе в реальном времени</p>
-                    </div>
+        </section>
+        
+        <!-- Секция авторизации -->
+        <section class="auth-section">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+                
+                <!-- Форма входа -->
+                <div id="loginForm" class="auth-form active">
+                    <h3>Вход в SoundCollab</h3>
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Пароль" required>
+                    <button id="loginBtn" class="auth-button">Войти</button>
+                    <p class="auth-link" data-switch="register">Нет аккаунта? Зарегистрироваться</p>
+                    <p class="auth-link" onclick="resetPassword()" style="font-size: 14px; margin-top: 10px;">
+                        Забыли пароль?
+                    </p>
+                </div>
+                
+                <!-- Форма регистрации -->
+                <div id="registerForm" class="auth-form">
+                    <h3>Регистрация в SoundCollab</h3>
+                    <input type="text" id="registerName" placeholder="Имя или псевдоним" required>
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="password" id="registerPassword" placeholder="Пароль (минимум 6 символов)" required>
+                    <button id="registerBtn" class="auth-button">Создать аккаунт</button>
+                    <p class="auth-link" data-switch="login">Уже есть аккаунт? Войти</p>
                 </div>
             </div>
         </section>
     </main>
-    
-    <footer>
-        <p>© 2024 SoundCollab. Первая платформа для коллаборации музыкантов с AI.</p>
-        <p class="dev-info">Сейчас в разработке. Версия 0.1</p>
-    </footer>
-    
-    <!-- ПОДКЛЮЧЕНИЕ СКРИПТОВ - ТОЛЬКО ОДИН РАЗ КАЖДЫЙ! -->
+
+    <!-- Подключение Firebase и скриптов -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <script src="auth.js"></script>
-    
     <script>
-        // Обработка главной кнопки
-        document.getElementById('main-action-btn').addEventListener('click', function() {
-            const user = firebase.auth().currentUser;
-            if (user) {
-                alert(`🎵 Отлично, ${user.displayName}! Скоро здесь будет создание проекта!`);
-            } else {
-                alert('Сначала войдите через Google, чтобы начать работу!');
-                document.getElementById('google-login-btn').click();
-            }
-        });
+        // firebase-config.js должен содержать вашу конфигурацию
+        // Если его нет, создайте файл firebase-config.js с кодом:
+        /*
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDx8iKcZ12bC8QQcLDLaVlzOueAJC3rTg",
+            authDomain: "soundcollab-fes9d.firebaseapp.com",
+            projectId: "soundcollab-fes9d",
+            storageBucket: "soundcollab-fes9d.appspot.com",
+            messagingSenderId: "383807903925",
+            appId: "1:383807903925:web:093dcd6af81b53d1a6945b"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        */
     </script>
+    <script src="auth-simple.js"></script>
 </body>
 </html>
