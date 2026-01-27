@@ -81,8 +81,3 @@ function initAuth() {
 // Запуск когда страница загрузится
 document.addEventListener('DOMContentLoaded', initAuth);
 
-firebase.auth().getRedirectResult().then(result => {
-  if (result.user) {
-    console.log('✅ Вход через redirect успешен:', result.user);
-  }
-});
