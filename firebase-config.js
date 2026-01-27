@@ -1,17 +1,15 @@
+// firebase-config.js
 const firebaseConfig = {
-  apiKey: "AIzaSyCwfHcLrEGB4V73r4utINVzflaA5DOp2s",
-  authDomain: "soundcollab-test-8a7c9.firebaseapp.com",
-  projectId: "soundcollab-test-8a7c9",
-  storageBucket: "soundcollab-test-8a7c9.appspot.com",
-  messagingSenderId: "1052506780909",
-  appId: "1:1052506780909:web:7f7c52b9c3d9c64378c3e9"
+    apiKey: "AIzaSyDDx8iKcZ12bC8QQcLDLaVlzOueAJC3rTg",
+    authDomain: "soundcollab-fes9d.firebaseapp.com",
+    projectId: "soundcollab-fes9d",
+    storageBucket: "soundcollab-fes9d.appspot.com",
+    messagingSenderId: "383807903925",
+    appId: "1:383807903925:web:093dcd6af81b53d1a6945b"
 };
 
-
-// Инициализация
+// Инициализация Firebase
 if (!firebase.apps.length) {
-  const app = firebase.initializeApp(firebaseConfig);
-  console.log("Firebase initialized successfully");
-} else {
-  console.log("Firebase already initialized");
+    firebase.initializeApp(firebaseConfig);
+    console.log("🔥 Firebase инициализирован");
 }
