@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoundCollab - Панель управления</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            border: 4px solid #667eea;
+        }
+        
+        .user-details h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .user-details p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: auto;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #ff3742;
+        }
+        
+        .dashboard-content {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .dashboard-content h3 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-content p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-button:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="user-info">
+            <img id="userAvatar" class="user-avatar" src="" alt="Аватар">
+            <div class="user-details">
+                <h2 id="userName">Загрузка...</h2>
+                <p id="userEmail">...</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Выйти</button>
+        </div>
+        
+        <div class="dashboard-content">
+            <h3>🎵 Добро пожаловать в SoundCollab!</h3>
+            <p>Начните создавать музыку вместе с AI и друзьями. Создайте свой первый проект или присоединитесь к существующему.</p>
+            
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 40px;">
+                <button class="cta-button" onclick="createProject()">➕ Создать проект</button>
+                <button class="cta-button" onclick="joinProject()">👥 Присоединиться</button>
+                <button class="cta-button" onclick="exploreTemplates()">🎨 Шаблоны</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    
+    <script>
+        // Проверяем авторизацию
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // Пользователь вошел
+                document.getElementById('userName').textContent = user.displayName || 'Пользователь';
+                document.getElementById('userEmail').textContent = user.email;
+                
+                if (user.photoURL) {
+                    document.getElementById('userAvatar').src = user.photoURL;
+                }
+                
+                console.log("✅ Пользователь в системе:", user.email);
+            } else {
+                // Пользователь не вошел - перенаправляем на главную
+                console.log("❌ Пользователь не авторизован, перенаправляем...");
+                window.location.href = "index.html";
+            }
+        });
+        
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                console.log("✅ Выход выполнен");
+                window.location.href = "index.html";
+            });
+        }
+        
+        function createProject() {
+            alert("Функция создания проекта будет доступна в следующем обновлении!");
+        }
+        
+        function joinProject() {
+            alert("Функция присоединения к проекту будет доступна в следующем обновлении!");
+        }
+        
+        function exploreTemplates() {
+            alert("Шаблоны будут доступны в следующем обновлении!");
+        }
+    </script>
+</body>
+</html>
