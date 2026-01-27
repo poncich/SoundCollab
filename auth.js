@@ -53,3 +53,5 @@ function initAuth() {
     }
   }
 }
+
+cument.addEventListener('DOMContentLoaded', initAuth);
