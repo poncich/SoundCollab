@@ -1,11 +1,12 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyD1qQZclFtl-zARTf4w3qckygmXvo8Ld9w",
+  apiKey: "AIzaSyDDx8iKcZ12bC8QQcLDLaVlzOueAJC3rTg",
   authDomain: "soundcollab-fes9d.firebaseapp.com",
   projectId: "soundcollab-fes9d",
   storageBucket: "soundcollab-fes9d.appspot.com",
-  messagingSenderId: "892512826888",
-  appId: "1:892512826888:web:abcdef1234567890abcdef"
+  messagingSenderId: "383807903925",
+  appId: "1:383807903925:web:093dcd6af81b53d1a6945b"
 };
 
-// Инициализация Firebase 8 (БЕЗ import!)
-firebase.initializeApp(firebaseConfig);
+// Инициализируем Firebase
+const app = firebase.initializeApp(firebaseConfig);
+console.log("Firebase initialized for domain:", window.location.hostname);
