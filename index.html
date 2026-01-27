@@ -5,23 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoundCollab - Создавай музыку вместе с AI</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем Firebase -->
-
 </head>
 <body>
     <header>
-        <div class="logo">SoundCollab</div>
+        <div class="logo">🎵 SoundCollab</div>
         <nav>
-            <!-- Блок информации о пользователе -->
             <div id="user-info" class="user-info"></div>
-            
-            <!-- Кнопка входа через Google (показывается если НЕ авторизован) -->
             <button id="google-login-btn" class="google-login-btn">
                 <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google">
                 Войти через Google
             </button>
-            
-            <!-- Кнопка выхода (показывается если авторизован) -->
             <button id="logout-btn" class="logout-btn" style="display: none;">
                 Выйти
             </button>
@@ -62,9 +55,12 @@
         <p class="dev-info">Сейчас в разработке. Версия 0.1</p>
     </footer>
     
-    <!-- Подключаем наши скрипты -->
+    <!-- ПОДКЛЮЧЕНИЕ СКРИПТОВ - ТОЛЬКО ОДИН РАЗ КАЖДЫЙ! -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="firebase-config.js"></script>
     <script src="auth.js"></script>
+    
     <script>
         // Обработка главной кнопки
         document.getElementById('main-action-btn').addEventListener('click', function() {
@@ -73,12 +69,9 @@
                 alert(`🎵 Отлично, ${user.displayName}! Скоро здесь будет создание проекта!`);
             } else {
                 alert('Сначала войдите через Google, чтобы начать работу!');
+                document.getElementById('google-login-btn').click();
             }
         });
     </script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="firebase-config.js"></script>
-<script src="auth.js"></script>
 </body>
 </html>
