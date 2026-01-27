@@ -1,11 +1,8 @@
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD1qQZclFtl-zARTf4w3qckygmXvo8Ld9w",
+  authDomain: "soundcollab-fe59d.firebaseapp.com",
+  projectId: "soundcollab-fe59d",
+  storageBucket: "soundcollab-fe59d.firebasestorage.app",
+  messagingSenderId: "892512826880",
+  appId: "1:892512826880:web:a346ee418fe79aab2f4ae5"
 };
-
-// Инициализация Firebase
-firebase.initializeApp(firebaseConfig);
