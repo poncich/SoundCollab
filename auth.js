@@ -1,5 +1,10 @@
-/ auth.js - ИСПРАВЛЕННЫЙ ВАРИАНТ
 function initAuth() {
+  // Проверяем, загружен ли Firebase
+  if (typeof firebase === 'undefined') {
+    console.error('Firebase не загружен! Проверь подключение в index.html');
+    return;
+  }
+  
   const auth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   
@@ -9,11 +14,11 @@ function initAuth() {
     loginBtn.addEventListener('click', () => {
       auth.signInWithPopup(googleProvider)
         .then((result) => {
-          console.log('Вход выполнен:', result.user);
+          console.log('✅ Вход выполнен:', result.user.email);
           updateUI(true, result.user);
         })
         .catch((error) => {
-          console.error('Ошибка входа:', error);
+          console.error('❌ Ошибка входа:', error.message);
           alert('Ошибка входа: ' + error.message);
         });
     });
@@ -25,10 +30,11 @@ function initAuth() {
     logoutBtn.addEventListener('click', () => {
       auth.signOut()
         .then(() => {
-          console.log('Выход выполнен');
+          console.log('✅ Выход выполнен');
+          updateUI(false);
         })
         .catch((error) => {
-          console.error('Ошибка выхода:', error);
+          console.error('❌ Ошибка выхода:', error);
         });
     });
   }
@@ -36,8 +42,10 @@ function initAuth() {
   // Отслеживание состояния входа
   auth.onAuthStateChanged((user) => {
     if (user) {
+      console.log('👤 Пользователь авторизован:', user.email);
       updateUI(true, user);
     } else {
+      console.log('👤 Пользователь не авторизован');
       updateUI(false);
     }
   });
@@ -47,22 +55,27 @@ function initAuth() {
     const userInfo = document.getElementById('user-info');
     const logoutBtn = document.getElementById('logout-btn');
     
+    // Показываем/скрываем кнопки
     if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'block';
     if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
     
+    // Показываем информацию о пользователе
     if (userInfo && user) {
-      // ВАЖНО: исправлена синтаксическая ошибка в шаблонной строке
       userInfo.innerHTML = `
         <div class="user-profile">
           <img src="${user.photoURL || 'https://via.placeholder.com/40'}" 
                alt="Аватар" width="40" height="40" style="border-radius: 50%;">
-          <span>Привет, ${user.displayName || 'Пользователь'}!</span>
+          <span>Привет, ${user.displayName || user.email || 'Пользователь'}!</span>
         </div>
       `;
     } else if (userInfo) {
       userInfo.innerHTML = ''; // Очищаем, если пользователь вышел
     }
   }
+  
+  // Инициализируем UI текущим состоянием
+  const currentUser = auth.currentUser;
+  updateUI(!!currentUser, currentUser);
 }
 
 // Запуск когда страница загрузится
