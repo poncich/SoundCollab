@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyB5qJAbGxG-A3BekXXv-EPq3QrFohu30JE", // НОВЫЙ КЛЮЧ
+  apiKey: "AIzaSyBJb0UFm0V3sPcpV74yEMMjgttv-fn2OGc", // НОВЫЙ КЛЮЧ
   authDomain: "soundcollab-fes9d.firebaseapp.com",
   projectId: "soundcollab-fes9d",
   storageBucket: "soundcollab-fes9d.appspot.com",
