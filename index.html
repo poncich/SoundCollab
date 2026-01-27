@@ -5,28 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoundCollab - Музыкальная коллаборация</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
         body { 
-            font-family: Arial, sans-serif; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: white;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
-        .logo { font-size: 28px; font-weight: bold; }
-        .hero { text-align: center; padding: 80px 20px; }
-        h1 { font-size: 48px; margin-bottom: 20px; }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px 0; 
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: bold; 
+            letter-spacing: 1px;
+        }
+        
+        .hero { 
+            text-align: center; 
+            padding: 80px 20px; 
+        }
+        
+        h1 { 
+            font-size: 48px; 
+            margin-bottom: 20px; 
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
         .cta-button { 
-            padding: 15px 40px; 
+            padding: 18px 40px; 
             background: white; 
             color: #667eea; 
             border: none; 
             border-radius: 50px; 
             font-size: 18px; 
+            font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
         .auth-section { 
             background: white; 
             color: #333; 
@@ -34,70 +81,254 @@
             border-radius: 20px; 
             max-width: 400px; 
             margin: 40px auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
+        
+        .auth-tabs { 
+            display: flex; 
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .auth-tab { 
+            flex: 1; 
+            padding: 15px; 
+            text-align: center; 
+            cursor: pointer; 
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab:hover {
+            background: #f8f9fa;
+        }
+        
+        .auth-tab.active { 
+            border-bottom: 3px solid #667eea; 
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .auth-form { 
+            display: none; 
+        }
+        
+        .auth-form.active { 
+            display: block; 
+        }
+        
+        .auth-form h3 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .auth-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
         .auth-form input { 
             width: 100%; 
-            padding: 12px; 
-            margin: 10px 0; 
-            border: 1px solid #ddd; 
-            border-radius: 8px;
+            padding: 15px; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
         }
+        
+        .auth-form input:focus { 
+            border-color: #667eea; 
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
         .auth-button { 
             width: 100%; 
-            padding: 15px; 
-            background: #667eea; 
+            padding: 16px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             color: white; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 10px; 
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            margin: 20px 0;
+            margin-top: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .auth-tabs { display: flex; margin-bottom: 20px; }
-        .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; }
-        .auth-tab.active { border-bottom: 3px solid #667eea; font-weight: bold; }
-        .auth-form { display: none; }
-        .auth-form.active { display: block; }
+        
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .auth-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .auth-link { 
+            text-align: center; 
+            color: #667eea; 
+            cursor: pointer; 
+            margin-top: 20px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .auth-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .auth-form.active {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+            
+            .hero {
+                padding: 40px 15px;
+            }
+            
+            .auth-section {
+                margin: 20px 15px;
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 28px;
+            }
+            
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+            
+            .auth-tab {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Шапка -->
         <header>
             <div class="logo">SoundCollab</div>
         </header>
         
+        <!-- Главный экран -->
         <section class="hero">
             <h1>Создавайте музыку вместе с AI</h1>
             <p>Простая платформа для коллаборации</p>
-            <button class="cta-button" onclick="scrollToAuth()">Попробовать бесплатно</button>
+            <button class="cta-button" id="mainCtaButton">Попробовать бесплатно</button>
         </section>
         
+        <!-- Секция авторизации -->
         <section class="auth-section" id="authSection">
+            <!-- Табы входа/регистрации -->
             <div class="auth-tabs">
-                <div class="auth-tab active" onclick="showForm('login')">Вход</div>
-                <div class="auth-tab" onclick="showForm('register')">Регистрация</div>
+                <div class="auth-tab active" id="loginTab" onclick="showForm('login')">Вход</div>
+                <div class="auth-tab" id="registerTab" onclick="showForm('register')">Регистрация</div>
             </div>
             
+            <!-- Форма входа -->
             <div id="loginForm" class="auth-form active">
-                <h3>Вход</h3>
-                <input type="email" id="loginEmail" placeholder="Email">
-                <input type="password" id="loginPassword" placeholder="Пароль">
-                <button class="auth-button" onclick="login()">Войти</button>
-                <p style="text-align: center; color: #666; cursor: pointer;" onclick="showForm('register')">
-                    Нет аккаунта? Зарегистрируйтесь
-                </p>
+                <form id="loginFormElement" onsubmit="event.preventDefault(); login();">
+                    <h3>Вход в SoundCollab</h3>
+                    
+                    <input type="email" id="loginEmail" placeholder="Ваш email" required>
+                    <div class="error-message" id="loginEmailError"></div>
+                    
+                    <input type="password" id="loginPassword" placeholder="Пароль" required minlength="6">
+                    <div class="error-message" id="loginPasswordError"></div>
+                    
+                    <button type="submit" class="auth-button" id="loginButton">
+                        Войти
+                    </button>
+                    
+                    <div class="success-message" id="loginSuccess"></div>
+                    
+                    <p class="auth-link" onclick="showForm('register')">
+                        Нет аккаунта? Зарегистрируйтесь
+                    </p>
+                    
+                    <p class="auth-link" onclick="forgotPassword()" style="font-size: 14px; margin-top: 10px;">
+                        Забыли пароль?
+                    </p>
+                </form>
             </div>
             
+            <!-- Форма регистрации -->
             <div id="registerForm" class="auth-form">
-                <h3>Регистрация</h3>
-                <input type="text" id="registerName" placeholder="Имя">
-                <input type="email" id="registerEmail" placeholder="Email">
-                <input type="password" id="registerPassword" placeholder="Пароль (6+ символов)">
-                <button class="auth-button" onclick="register()">Создать аккаунт</button>
-                <p style="text-align: center; color: #666; cursor: pointer;" onclick="showForm('login')">
-                    Уже есть аккаунт? Войдите
-                </p>
+                <form id="registerFormElement" onsubmit="event.preventDefault(); register();">
+                    <h3>Регистрация в SoundCollab</h3>
+                    
+                    <input type="text" id="registerName" placeholder="Имя или псевдоним" required>
+                    <div class="error-message" id="registerNameError"></div>
+                    
+                    <input type="email" id="registerEmail" placeholder="Ваш email" required>
+                    <div class="error-message" id="registerEmailError"></div>
+                    
+                    <input type="password" id="registerPassword" placeholder="Пароль (минимум 6 символов)" required minlength="6">
+                    <div class="error-message" id="registerPasswordError"></div>
+                    
+                    <button type="submit" class="auth-button" id="registerButton">
+                        Создать аккаунт
+                    </button>
+                    
+                    <div class="success-message" id="registerSuccess"></div>
+                    
+                    <p class="auth-link" onclick="showForm('login')">
+                        Уже есть аккаунт? Войдите
+                    </p>
+                </form>
             </div>
         </section>
+        
+        <!-- Футер -->
+        <footer style="text-align: center; padding: 40px 20px; color: rgba(255,255,255,0.7); font-size: 14px;">
+            <p>© 2023 SoundCollab. Музыкальная платформа для коллаборации.</p>
+        </footer>
     </div>
 
     <!-- Firebase SDK -->
@@ -105,25 +336,112 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     
     <!-- Наши скрипты -->
-    <script src="firebase-simple.js"></script>
+    <script src="firebase-new.js"></script>
     <script src="auth-minimal.js"></script>
     
     <script>
-        function scrollToAuth() {
-            document.getElementById('authSection').scrollIntoView({ behavior: 'smooth' });
-            showForm('register');
-        }
-        
+        // Функции для переключения форм
         function showForm(formName) {
+            // Сбрасываем ошибки
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+            
+            document.querySelectorAll('.success-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+            
             // Обновляем табы
-            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.auth-tab')[formName === 'login' ? 0 : 1].classList.add('active');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('registerTab').classList.remove('active');
+            
+            if (formName === 'login') {
+                document.getElementById('loginTab').classList.add('active');
+            } else {
+                document.getElementById('registerTab').classList.add('active');
+            }
             
             // Обновляем формы
             document.getElementById('loginForm').classList.remove('active');
             document.getElementById('registerForm').classList.remove('active');
             document.getElementById(formName + 'Form').classList.add('active');
+            
+            // Фокус на первое поле
+            setTimeout(() => {
+                const firstInput = document.querySelector(`#${formName}Form input`);
+                if (firstInput) firstInput.focus();
+            }, 100);
         }
+        
+        // Прокрутка к форме при нажатии на главную кнопку
+        document.getElementById('mainCtaButton').addEventListener('click', function() {
+            document.getElementById('authSection').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+            showForm('register');
+        });
+        
+        // Восстановление пароля
+        function forgotPassword() {
+            const email = prompt('Введите ваш email для восстановления пароля:');
+            if (email) {
+                // Здесь будет вызов Firebase для восстановления пароля
+                alert('Функция восстановления пароля будет доступна после настройки Firebase');
+            }
+        }
+        
+        // Показать сообщение об ошибке
+        function showError(fieldId, message) {
+            const errorEl = document.getElementById(fieldId + 'Error');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+            }
+        }
+        
+        // Показать сообщение об успехе
+        function showSuccess(formType, message) {
+            const successEl = document.getElementById(formType + 'Success');
+            if (successEl) {
+                successEl.textContent = message;
+                successEl.style.display = 'block';
+            }
+        }
+        
+        // Очистить все сообщения
+        function clearMessages() {
+            document.querySelectorAll('.error-message, .success-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+        }
+        
+        // Функции для входа и регистрации (будут в auth-minimal.js)
+        async function login() {
+            // Эта функция определена в auth-minimal.js
+            console.log('Вызов функции login...');
+        }
+        
+        async function register() {
+            // Эта функция определена в auth-minimal.js
+            console.log('Вызов функции register...');
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SoundCollab загружен');
+            
+            // Проверяем, есть ли хэш в URL для автоматического показа формы
+            const hash = window.location.hash;
+            if (hash === '#login') {
+                showForm('login');
+            } else if (hash === '#register') {
+                showForm('register');
+            }
+        });
     </script>
 </body>
 </html>
