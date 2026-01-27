@@ -1,32 +1,31 @@
-// auth-simple.js
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("🔥 SoundCollab: Инициализация системы регистрации...");
+// auth-simple.js - УПРОЩЕННАЯ ВЕРСИЯ
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log("🔧 Инициализация SoundCollab...");
     
-    // Показываем/скрываем формы
-    document.querySelectorAll('.auth-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            const tabName = this.getAttribute('data-tab');
-            switchAuthForm(tabName);
-        });
+    // Ждем загрузки Firebase
+    await waitForFirebase();
+    
+    // Остальной код без изменений...
+    setupAuthForms();
+    setupEventListeners();
+    checkAuthState();
+});
+
+async function waitForFirebase() {
+    // Ждем пока Firebase загрузится
+    return new Promise((resolve) => {
+        const checkFirebase = () => {
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                console.log("✅ Firebase загружен");
+                resolve();
+            } else {
+                console.log("⏳ Ожидаем Firebase...");
+                setTimeout(checkFirebase, 100);
+            }
+        };
+        checkFirebase();
     });
-    
-    document.querySelectorAll('.auth-link').forEach(link => {
-        link.addEventListener('click', function() {
-            const tabName = this.getAttribute('data-switch');
-            switchAuthForm(tabName);
-        });
-    });
-    
-    // Обработка кнопки "Попробовать бесплатно"
-    const mainBtn = document.getElementById('main-action-btn');
-    if (mainBtn) {
-        mainBtn.addEventListener('click', function() {
-            // Прокручиваем к форме регистрации
-            document.querySelector('.auth-section').scrollIntoView({ behavior: 'smooth' });
-            // Показываем форму регистрации
-            switchAuthForm('register');
-        });
-    }
+}
     
     // Обработка входа
     document.getElementById('loginBtn').addEventListener('click', loginWithEmail);
