@@ -443,5 +443,50 @@
             }
         });
     </script>
+    <!-- Демо-скрипт (работает если Firebase не загрузился) -->
+<script src="demo-auth.js"></script>
+
+<!-- Проверка Firebase (добавьте в конец) -->
+<script>
+    // Проверяем через 3 секунды, загрузился ли Firebase
+    setTimeout(() => {
+        if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
+            console.log("⚠️ Firebase не загрузился, включаем демо-режим");
+            
+            // Показываем сообщение пользователю
+            const demoAlert = document.createElement('div');
+            demoAlert.innerHTML = `
+                <div style="
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    background: #ff9800;
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                    z-index: 9999;
+                    max-width: 300px;
+                    animation: fadeIn 0.5s;
+                ">
+                    <strong>🔧 Демо-режим</strong>
+                    <p style="margin: 8px 0 0; font-size: 14px;">
+                        Firebase не подключен. Работаем в демо-режиме.
+                    </p>
+                </div>
+            `;
+            document.body.appendChild(demoAlert);
+            
+            // Убираем через 10 секунд
+            setTimeout(() => {
+                demoAlert.style.opacity = '0';
+                demoAlert.style.transition = 'opacity 0.5s';
+                setTimeout(() => demoAlert.remove(), 500);
+            }, 10000);
+        } else {
+            console.log("✅ Firebase загрузился нормально");
+        }
+    }, 3000);
+</script>
 </body>
 </html>
