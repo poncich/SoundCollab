@@ -3,15 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoundCollab - Создавай музыку с AI</title>
+    <title>SoundCollab - Создавай музыку вместе с AI</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Подключаем Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 </head>
 <body>
     <header>
-        <div class="logo">SoundCollab</div>
+        <div class="logo">🎵 SoundCollab</div>
         <nav>
-            <button class="login-btn">Войти</button>
-            <button class="register-btn">Регистрация</button>
+            <!-- Блок информации о пользователе -->
+            <div id="user-info" class="user-info"></div>
+            
+            <!-- Кнопка входа через Google (показывается если НЕ авторизован) -->
+            <button id="google-login-btn" class="google-login-btn">
+                <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google">
+                Войти через Google
+            </button>
+            
+            <!-- Кнопка выхода (показывается если авторизован) -->
+            <button id="logout-btn" class="logout-btn" style="display: none;">
+                Выйти
+            </button>
         </nav>
     </header>
     
@@ -19,13 +33,49 @@
         <section class="hero">
             <h1>Создавай музыку вместе с AI и друзьями</h1>
             <p>Простая платформа для коллаборации</p>
-            <button class="cta-button">Попробовать бесплатно</button>
-            <div class="screenshot-placeholder">
-                [Здесь будет интерфейс]
+            <button id="main-action-btn" class="cta-button">Попробовать бесплатно</button>
+            
+            <div class="demo-section">
+                <h2>Как это работает?</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Войди через Google</h3>
+                        <p>Быстрая регистрация за 2 клика</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Создай проект</h3>
+                        <p>Добавь аудио или сгенерируй с помощью AI</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Пригласи друзей</h3>
+                        <p>Работайте над треком вместе в реальном времени</p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
     
-    <script src="script.js"></script>
+    <footer>
+        <p>© 2024 SoundCollab. Первая платформа для коллаборации музыкантов с AI.</p>
+        <p class="dev-info">Сейчас в разработке. Версия 0.1</p>
+    </footer>
+    
+    <!-- Подключаем наши скрипты -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Обработка главной кнопки
+        document.getElementById('main-action-btn').addEventListener('click', function() {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                alert(`🎵 Отлично, ${user.displayName}! Скоро здесь будет создание проекта!`);
+            } else {
+                alert('Сначала войдите через Google, чтобы начать работу!');
+            }
+        });
+    </script>
 </body>
 </html>
