@@ -12,7 +12,7 @@ function initAuth() {
   const loginBtn = document.getElementById('google-login-btn');
   if (loginBtn) {
     loginBtn.addEventListener('click', () => {
-      auth.signInWithPopup(googleProvider)
+      auth.signInWithRedirect(googleProvider)
         .then((result) => {
           console.log('✅ Вход выполнен:', result.user.email);
           updateUI(true, result.user);
@@ -80,3 +80,9 @@ function initAuth() {
 
 // Запуск когда страница загрузится
 document.addEventListener('DOMContentLoaded', initAuth);
+
+firebase.auth().getRedirectResult().then(result => {
+  if (result.user) {
+    console.log('✅ Вход через redirect успешен:', result.user);
+  }
+});
