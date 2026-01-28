@@ -1,0 +1,22 @@
+# Ключи и конфигурация
+firebase-config.js
+.env
+.env.local
+*.env
+
+# Зависимости  
+node_modules/
+npm-debug.log*
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Идеи редакторов
+.idea/
+.vscode/
+*.swp
+
+# Сборка
+dist/
+build/
