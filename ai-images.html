@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>SoundCollab - AI Генератор изображений</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .logo { font-size: 28px; font-weight: bold; }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .generator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            color: #333;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 900px) {
+            .generator-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .prompt-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .prompt-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: block;
+            color: #333;
+        }
+        
+        .prompt-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            font-family: inherit;
+            transition: border 0.3s;
+        }
+        
+        .prompt-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .styles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .style-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .style-option:hover {
+            transform: translateY(-2px);
+            border-color: #667eea;
+        }
+        
+        .style-option.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .settings-section {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .setting-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .setting-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .setting-select, .setting-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .ai-model-selector {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .model-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .model-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .model-tab:hover {
+            background: #f8f9fa;
+        }
+        
+        .model-tab.active {
+            border-bottom: 3px solid #667eea;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .model-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+        }
+        
+        .image-result {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .placeholder-image {
+            width: 200px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+        
+        .placeholder-text {
+            color: #999;
+            font-size: 16px;
+        }
+        
+        .generated-image {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .image-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .history-section {
+            margin-top: 40px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            color: #333;
+        }
+        
+        .history-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .history-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .history-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .history-prompt {
+            padding: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .credits {
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Бейджи для моделей */
+        .model-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .badge-free { background: #4CAF50; color: white; }
+        .badge-premium { background: #FF9800; color: white; }
+        .badge-pro { background: #9C27B0; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <div class="header">
+            <div class="logo">SoundCollab</div>
+            <a href="dashboard.html" class="back-btn">← Назад в студию</a>
+        </div>
+        
+        <!-- Заголовок -->
+        <h1 class="main-title">🎨 AI Генератор изображений</h1>
+        <p class="subtitle">Создавайте обложки для треков, арты и визуализации с помощью ИИ</p>
+        
+        <!-- Основной блок генератора -->
+        <div class="generator-container">
+            <!-- Левая часть: Ввод и настройки -->
+            <div class="input-section">
+                <div class="prompt-box">
+                    <label class="prompt-label">Опишите изображение:</label>
+                    <textarea 
+                        class="prompt-input" 
+                        id="promptInput" 
+                        placeholder="Например: 'космонавт играет на гитаре в космосе, цифровое искусство, яркие цвета'"
+                    ></textarea>
+                    
+                    <div style="margin-top: 20px;">
+                        <label class="prompt-label">Стиль:</label>
+                        <div class="styles-grid" id="stylesGrid">
+                            <!-- Стили будут добавлены через JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <div class="setting-group">
+                        <label class="setting-label">Размер:</label>
+                        <select class="setting-select" id="sizeSelect">
+                            <option value="512x512">512×512 (быстро)</option>
+                            <option value="768x768">768×768 (стандарт)</option>
+                            <option value="1024x1024">1024×1024 (HD)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label class="setting-label">Качество:</label>
+                        <select class="setting-select" id="qualitySelect">
+                            <option value="fast">Быстрое</option>
+                            <option value="standard" selected>Стандартное</option>
+                            <option value="high">Высокое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label class="setting-label">Количество:</label>
+                        <select class="setting-select" id="countSelect">
+                            <option value="1">1 изображение</option>
+                            <option value="2">2 варианта</option>
+                            <option value="4">4 варианта</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="generate-btn" id="generateBtn">
+                    🚀 Сгенерировать изображение
+                </button>
+            </div>
+            
+            <!-- Правая часть: Выбор модели и результат -->
+            <div class="output-section">
+                <div class="ai-model-selector">
+                    <div class="model-tabs" id="modelTabs">
+                        <!-- Вкладки будут добавлены через JS -->
+                    </div>
+                    
+                    <div id="modelInfo">
+                        <!-- Информация о модели будет обновляться -->
+                    </div>
+                </div>
+                
+                <div class="image-result" id="imageResult">
+                    <div class="loading" id="loadingIndicator" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>ИИ создает изображение... Это займет 10-30 секунд</p>
+                        <p id="progressText"></p>
+                    </div>
+                    
+                    <div id="resultContainer">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f0f0f0'/%3E%3Cpath d='M80,70 Q100,50 120,70' stroke='%23ccc' fill='none' stroke-width='2'/%3E%3Ccircle cx='100' cy='100' r='40' fill='white' stroke='%23ccc' stroke-width='2'/%3E%3C/svg%3E" 
+                             class="placeholder-image" alt="Placeholder">
+                        <p class="placeholder-text">Здесь появится сгенерированное изображение</p>
+                    </div>
+                    
+                    <div class="image-actions" id="imageActions" style="display: none;">
+                        <button class="action-btn" onclick="downloadImage()">💾 Скачать</button>
+                        <button class="action-btn" onclick="saveToProject()">🎵 Добавить в проект</button>
+                        <button class="action-btn" onclick="generateVariation()">🔄 Вариация</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- История генераций -->
+        <div class="history-section">
+            <h2 class="history-title">📚 История генераций</h2>
+            <div class="history-grid" id="historyGrid">
+                <!-- История будет загружаться из localStorage -->
+            </div>
+        </div>
+        
+        <!-- Футер -->
+        <div class="credits">
+            <p>SoundCollab AI Generator | Использует Stable Diffusion API | Для коммерческого использования требуется лицензия</p>
+        </div>
+    </div>
+    
+    <!-- Подключаем скрипты -->
+    <script src="ai-images.js"></script>
+</body>
+</html>
