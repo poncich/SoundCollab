@@ -1,63 +1,82 @@
-// firebase-config.js
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// firebase-config.js - Конфигурация Firebase для SoundCollab
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAKrjtyk9pXAdTRLI_Jm7pM-bRjvX7O3cI",
-  authDomain: "soundcollab-production.firebaseapp.com",
-  projectId: "soundcollab-production",
-  storageBucket: "soundcollab-production.firebasestorage.app",
-  messagingSenderId: "1024413284863",
-  appId: "1:1024413284863:web:1e051df31f3fd0b3f0cfca",
-  measurementId: "G-TYM8HQZ0ZS"
+// Проверяем режим работы
+const isDemoMode = typeof window !== 'undefined' && 
+                   (window.location.hostname === 'localhost' || 
+                    window.location.hostname.includes('github.io'));
+
+// Демо конфигурация (по умолчанию)
+const demoConfig = {
+    apiKey: "demo-mode-key",
+    authDomain: "demo.soundcollab.com",
+    projectId: "soundcollab-demo",
+    storageBucket: "soundcollab-demo.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:abcdef123456"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Реальная конфигурация (будет подставляться при сборке)
+// ВНИМАНИЕ: Никогда не публикуйте реальные ключи в репозитории!
+// Используйте переменные окружения или серверную сборку
 
-// Выбираем конфигурацию
-const configToUse = firebaseConfig;
+const productionConfig = {
+    apiKey: window.FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || "",
+    authDomain: window.FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN || "",
+    projectId: window.FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID || "",
+    storageBucket: window.FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET || "",
+    messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID || "",
+    appId: window.FIREBASE_APP_ID || process.env.FIREBASE_APP_ID || ""
+};
 
-// Инициализация с обработкой ошибок
-try {
-    if (!firebase.apps.length) {
-        const app = firebase.initializeApp(configToUse);
-        console.log("✅ Firebase инициализирован с ключом:", configToUse.apiKey.substring(0, 10) + "...");
-        
-        // Тестируем подключение
-        testFirebaseConnection();
-    } else {
-        console.log("ℹ️ Firebase уже инициализирован");
-    }
-} catch (error) {
-    console.error("❌ Ошибка инициализации Firebase:", error);
+// Выбираем конфигурацию в зависимости от режима
+const firebaseConfig = isDemoMode ? demoConfig : productionConfig;
+
+// Проверяем наличие реальных ключей
+const hasRealKeys = firebaseConfig.apiKey && 
+                    firebaseConfig.apiKey !== "demo-mode-key" && 
+                    firebaseConfig.apiKey.length > 20;
+
+// Устанавливаем глобальную переменную режима
+if (typeof window !== 'undefined') {
+    window.isDemoMode = !hasRealKeys;
     
-    // Пробуем резервную конфигурацию
-    console.log("🔄 Пробуем резервную конфигурацию...");
-    try {
-        const backupApp = firebase.initializeApp(backupConfig, "BackupApp");
-        console.log("✅ Резервная конфигурация работает!");
-    } catch (backupError) {
-        console.error("❌ Резервная конфигурация тоже не работает:", backupError);
+    if (window.isDemoMode) {
+        console.log('🎵 SoundCollab работает в демо-режиме');
+        console.log('🔧 Для подключения Firebase:');
+        console.log('1. Создайте проект на https://firebase.google.com');
+        console.log('2. Получите ключи из настроек проекта');
+        console.log('3. Замените значения в firebase-config.js');
+    } else {
+        console.log('🚀 SoundCollab подключен к Firebase');
     }
 }
 
-async function testFirebaseConnection() {
-    try {
-        // Простой тест Firebase
-        const auth = firebase.auth();
-        console.log("🔧 Auth object доступен:", !!auth);
-        
-        // Проверяем, доступны ли методы
-        console.log("🔧 Методы auth доступны:", typeof auth.signInWithEmailAndPassword === 'function');
-        
-    } catch (error) {
-        console.error("❌ Ошибка теста Firebase:", error);
-    }
+// Экспорт конфигурации
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { firebaseConfig, isDemoMode: !hasRealKeys };
+} else {
+    // Для использования в браузере
+    window.firebaseConfig = firebaseConfig;
+}
+
+// Дополнительные настройки Firebase
+const firebaseSettings = {
+    enablePersistence: true, // Включаем оффлайн-режим
+    cacheSizeBytes: 50 * 1024 * 1024, // 50MB кэша
+    experimentalForceLongPolling: false,
+    merge: true // Автоматическое слияние данных
+};
+
+// Глобальные переменные для разработки
+if (typeof window !== 'undefined' && window.isDemoMode) {
+    console.log('📋 Демо-данные загружены');
+    console.log('💡 Подсказка: используйте localStorage для тестирования');
+    console.log('👤 Демо пользователь: demo@soundcollab.com / любой пароль');
+}
+
+// Экспорт настроек
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports.firebaseSettings = firebaseSettings;
+} else {
+    window.firebaseSettings = firebaseSettings;
 }
