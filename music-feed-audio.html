@@ -3,250 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoundCollab Premium - Музыкальная лента</title>
+    <title>Музыкальная лента - SoundCollab</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="https://i.imgur.com/8kLxQ9p.png" type="image/x-icon">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        
-        body {
-            background: #121212;
-            color: white;
-            min-height: 100vh;
-        }
-        
-        /* Премиум шапка */
-        .premium-header {
-            background: linear-gradient(135deg, #667eaa 0%, #764ba2 100%);
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .premium-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: moveBackground 20s linear infinite;
-        }
-        
-        @keyframes moveBackground {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #fff, #a8edea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .user-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .upgrade-btn {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .upgrade-btn:hover {
-            transform: scale(1.05);
-        }
-        
-        /* Основной контент */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .music-header {
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.1) 0%, 
+                rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 20px;
             padding: 30px;
+            margin: 30px 0;
         }
         
-        .audio-player {
-            background: rgba(255, 255, 255, 0.05);
+        .music-player {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
         }
         
-        .track-info {
+        .player-controls {
             display: flex;
             align-items: center;
             gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .track-cover {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-        }
-        
-        .track-details h3 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .track-details p {
-            color: #aaa;
-            font-size: 16px;
-        }
-        
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
         
         .play-btn {
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .play-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        .progress-container {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
         }
         
         .progress-bar {
-            flex-grow: 1;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .progress {
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2);
-            width: 50%;
+            border-radius: 3px;
+            width: 30%;
         }
         
-        .time {
-            color: #aaa;
-            font-size: 14px;
-        }
-        
-        /* Лента треков */
-        .tracks-feed {
+        .tracks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+            margin-top: 30px;
         }
         
         .track-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             padding: 20px;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            cursor: pointer;
         }
         
         .track-card:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+            background: rgba(102, 126, 234, 0.05);
         }
         
-        .premium-badge {
-            display: inline-block;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #000;
-            padding: 3px 10px;
-            border-radius: 12px;
+        .track-cover {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .track-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .track-artist {
+            color: #b0b0b0;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .track-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #b0b0b0;
             font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .tracks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-controls {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Премиум шапка -->
-    <header class="premium-header">
-        <div class="logo">🎵 SoundCollab Premium</div>
-        <div class="user-controls">
-            <button class="upgrade-btn">⭐ Апгрейд до PRO</button>
-            <div class="user-avatar"></div>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">🎵</div>
+                <div class="logo-text">
+                    <span class="logo-text-main">Sound</span>
+                    <span class="logo-text-accent">Collab</span>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link">🏠 Дашборд</a>
+                <a href="music-feed-audio.html" class="nav-link active">🎵 Музыка</a>
+                <a href="ai-images.html" class="nav-link">🎨 AI Генератор</a>
+                <a href="projects.html" class="nav-link">📁 Проекты</a>
+                <button onclick="logout()" class="btn btn-secondary btn-small">
+                    👋 Выйти
+                </button>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- Основной контент -->
-    <main class="container">
-        <!-- Аудио плеер -->
-        <section class="audio-player">
-            <div class="track-info">
-                <div class="track-cover"></div>
-                <div class="track-details">
-                    <h3>Blinding Lights <span class="premium-badge">PREMIUM</span></h3>
-                    <p>The Weeknd • Pop • 2020</p>
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="music-header">
+            <h1>🎵 Музыкальная лента</h1>
+            <p style="color: #b0b0b0; margin-top: 10px;">
+                Слушайте треки и открывайте новую музыку
+            </p>
+        </div>
+
+        <!-- Плеер -->
+        <div class="music-player">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div class="track-cover">🎧</div>
+                <div>
+                    <h3>Blinding Lights</h3>
+                    <p style="color: #b0b0b0;">The Weeknd • Поп • 2020</p>
                 </div>
             </div>
             
-            <div class="controls">
-                <button class="play-btn">▶</button>
-                <div class="progress-bar">
-                    <div class="progress"></div>
+            <div class="player-controls">
+                <button class="play-btn" id="play-btn">▶</button>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
                 </div>
-                <div class="time">2:30 / 3:20</div>
+                <div id="current-time">1:30 / 3:20</div>
             </div>
-        </section>
+            
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button class="btn btn-secondary btn-small">❤️ Нравится</button>
+                <button class="btn btn-secondary btn-small">➕ В плейлист</button>
+                <button class="btn btn-secondary btn-small">↗️ Поделиться</button>
+            </div>
+        </div>
+
+        <!-- Фильтры -->
+        <div style="display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-small">Все</button>
+            <button class="btn btn-secondary btn-small">Поп</button>
+            <button class="btn btn-secondary btn-small">Рок</button>
+            <button class="btn btn-secondary btn-small">Электро</button>
+            <button class="btn btn-secondary btn-small">Хип-хоп</button>
+            <button class="btn btn-secondary btn-small">Джаз</button>
+        </div>
 
         <!-- Лента треков -->
-        <section class="tracks-feed">
-            <!-- Треки будут загружаться через JS -->
-        </section>
-    </main>
+        <h3 style="margin-bottom: 20px;">🔥 Популярные треки</h3>
+        <div class="tracks-grid" id="tracks-container">
+            <!-- Треки будут загружены через JS -->
+        </div>
+    </div>
 
-    <!-- Подключение скриптов -->
-    <script src="js/music-feed-audio.js"></script>
+    <script src="js/auth.js"></script>
     <script>
-        // Инициализация
+        // Проверка авторизации
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Музыкальная лента загружена');
+            const user = localStorage.getItem('soundcollab_user');
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
             
-            // Обработка кнопки play
-            const playBtn = document.querySelector('.play-btn');
-            playBtn.addEventListener('click', function() {
-                const isPlaying = this.textContent === '⏸';
-                this.textContent = isPlaying ? '▶' : '⏸';
-                console.log(isPlaying ? 'Пауза' : 'Воспроизведение');
-            });
+            // Функция выхода
+            window.logout = function() {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    localStorage.removeItem('soundcollab_user');
+                    localStorage.removeItem('soundcollab_premium');
+                    window.location.href = 'index.html';
+                }
+            };
             
-            // Загрузка треков
-            fetchTracks();
+            // Загружаем треки
+            loadTracks();
+            
+            // Настройка плеера
+            setupPlayer();
         });
         
-        function fetchTracks() {
-            // Здесь будет загрузка треков
-            console.log('Загрузка треков...');
+        function loadTracks() {
+            const tracks = [
+                {
+                    id: 1,
+                    title: "Bad Guy",
+                    artist: "Billie Eilish",
+                    genre: "Поп",
+                    year: 2019,
+                    duration: "3:14",
+                    likes: "1.2M",
+                    plays: "850K",
+                    color: "#4ECDC4"
+                },
+                {
+                    id: 2,
+                    title: "Levitating",
+                    artist: "Dua Lipa",
+                    genre: "Поп",
+                    year: 2020,
+                    duration: "3:24",
+                    likes: "980K",
+                    plays: "720K",
+                    color: "#FF6B6B"
+                },
+                {
+                    id: 3,
+                    title: "Save Your Tears",
+                    artist: "The Weeknd",
+                    genre: "R&B",
+                    year: 2020,
+                    duration: "3:35",
+                    likes: "1.1M",
+                    plays: "950K",
+                    color: "#667eea"
+                },
+                {
+                    id: 4,
+                    title: "Stay",
+                    artist: "The Kid LAROI, Justin Bieber",
+                    genre: "Поп",
+                    year: 2021,
+                    duration: "2:23",
+                    likes: "1.5M",
+                    plays: "1.1M",
+                    color: "#764ba2"
+                },
+                {
+                    id: 5,
+                    title: "Good 4 U",
+                    artist: "Olivia Rodrigo",
+                    genre: "Поп-рок",
+                    year: 2021,
+                    duration: "2:58",
+                    likes: "1.3M",
+                    plays: "980K",
+                    color: "#f093fb"
+                },
+                {
+                    id: 6,
+                    title: "Heat Waves",
+                    artist: "Glass Animals",
+                    genre: "Инди",
+                    year: 2020,
+                    duration: "3:58",
+                    likes: "2.1M",
+                    plays: "1.5M",
+                    color: "#FFD166"
+                }
+            ];
+            
+            const container = document.getElementById('tracks-container');
+            if (!container) return;
+            
+            container.innerHTML = tracks.map(track => `
+                <div class="track-card" onclick="playTrack(${track.id})">
+                    <div class="track-cover" style="background: linear-gradient(135deg, ${track.color}, ${track.color}80)">
+                        🎵
+                    </div>
+                    <div class="track-info">
+                        <h4>${track.title}</h4>
+                        <p class="track-artist">${track.artist} • ${track.genre} • ${track.year}</p>
+                        <div class="track-stats">
+                            <span>❤️ ${track.likes}</span>
+                            <span>▶️ ${track.plays}</span>
+                            <span>⏱️ ${track.duration}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function setupPlayer() {
+            const playBtn = document.getElementById('play-btn');
+            const progressBar = document.getElementById('progress-bar');
+            let isPlaying = false;
+            
+            playBtn.addEventListener('click', function() {
+                isPlaying = !isPlaying;
+                this.textContent = isPlaying ? '⏸' : '▶';
+                
+                if (isPlaying) {
+                    // Имитация воспроизведения
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        if (progress >= 100) {
+                            clearInterval(interval);
+                            isPlaying = false;
+                            playBtn.textContent = '▶';
+                            progressBar.style.width = '0%';
+                            return;
+                        }
+                        
+                        progress += 0.5;
+                        progressBar.style.width = progress + '%';
+                        
+                        // Обновляем время
+                        const totalSeconds = 200; // 3:20
+                        const currentSeconds = Math.floor(totalSeconds * (progress / 100));
+                        const mins = Math.floor(currentSeconds / 60);
+                        const secs = currentSeconds % 60;
+                        document.getElementById('current-time').textContent = 
+                            `${mins}:${secs < 10 ? '0' : ''}${secs} / 3:20`;
+                    }, 100);
+                    
+                    // Сохраняем интервал для остановки
+                    playBtn.dataset.interval = interval;
+                } else {
+                    // Останавливаем воспроизведение
+                    const interval = playBtn.dataset.interval;
+                    if (interval) {
+                        clearInterval(interval);
+                    }
+                }
+            });
+        }
+        
+        function playTrack(trackId) {
+            alert(`🎵 Воспроизведение трека #${trackId}\n\nВ демо-режиме это имитация. В реальном режиме будет загружено аудио.`);
         }
     </script>
 </body>
