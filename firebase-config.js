@@ -1,11 +1,11 @@
 // Автоматически генерируется при сборке
 const firebaseConfig = {
-  apiKey: "demo-mode-key",
-  authDomain: "",
+  apiKey: "AIzaSyAKrjtyk9pXAdTRLI_Jm7pM-bRjvX7O3cI",
+  authDomain: "soundcollab-production.firebaseapp.com",
   projectId: "soundcollab-fes9d",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  storageBucket: "lab-production.firebasestorage.app",
+  messagingSenderId: "1024413284863",
+  appId: "1:1024413284863:web:1e051df31f3fd0b3f0cfca"
 };
 
 // Проверка на демо-режим
