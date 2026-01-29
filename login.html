@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - SoundCollab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            background: var(--gradient-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.2) 0%, transparent 50%);
+            animation: pulse 10s infinite alternate;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            animation: scaleIn 0.6s ease;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .login-logo i {
+            font-size: 3rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .login-logo span {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+        
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+        }
+        
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        .checkbox-input:checked {
+            background: var(--gradient-primary);
+            border-color: var(--primary);
+        }
+        
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .forgot-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .login-divider span {
+            padding: 0 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .social-login {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-social:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .demo-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .demo-title {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .btn-demo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-demo:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: slideInDown 0.3s ease;
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            display: block;
+        }
+        
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            display: block;
+        }
+        
+        .floating-music-notes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .music-note {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+        
+        .music-note:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .music-note:nth-child(2) {
+            top: 60%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+        
+        .music-note:nth-child(3) {
+            top: 30%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+        
+        .music-note:nth-child(4) {
+            top: 70%;
+            right: 15%;
+            animation-delay: 6s;
+        }
+        
+        .music-note:nth-child(5) {
+            top: 40%;
+            left: 20%;
+            animation-delay: 8s;
+        }
+        
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 2rem;
+            }
+            
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="floating-music-notes">
+            <div class="music-note">♪</div>
+            <div class="music-note">♫</div>
+            <div class="music-note">🎵</div>
+            <div class="music-note">🎶</div>
+            <div class="music-note">🎧</div>
+        </div>
+        
+        <div class="login-container">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-wave-square"></i>
+                    <span>SoundCollab</span>
+                </div>
+                <h1 class="login-title">С возвращением!</h1>
+                <p class="login-subtitle">Войдите в свой аккаунт, чтобы продолжить творчество</p>
+            </div>
+            
+            <div id="message" class="message"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" 
+                           id="email" 
+                           class="form-input" 
+                           placeholder="your@email.com"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <div style="position: relative;">
+                        <input type="password" 
+                               id="password" 
+                               class="form-input" 
+                               placeholder="••••••••"
+                               required>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="remember" class="checkbox-input">
+                        <span>Запомнить меня</span>
+                    </label>
+                    <a href="#" class="forgot-link">Забыли пароль?</a>
+                </div>
+                
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span id="btnText">Войти в аккаунт</span>
+                    <div id="btnLoading" class="loading-dots" style="display: none;">
+                        <span></span><span></span><span></span>
+                    </div>
+                </button>
+            </form>
+            
+            <div class="login-divider">
+                <span>или продолжите с</span>
+            </div>
+            
+            <div class="social-login">
+                <a href="#" class="btn-social">
+                    <i class="fab fa-google"></i>
+                    <span>Google</span>
+                </a>
+                <a href="#" class="btn-social">
+                    <i class="fab fa-apple"></i>
+                    <span>Apple</span>
+                </a>
+                <a href="#" class="btn-social">
+                    <i class="fab fa-spotify"></i>
+                    <span>Spotify</span>
+                </a>
+            </div>
+            
+            <div class="demo-section">
+                <p class="demo-title">Хотите просто попробовать?</p>
+                <a href="dashboard.html" class="btn-demo" id="demoBtn">
+                    <i class="fas fa-magic"></i>
+                    <span>Попробовать демо-режим</span>
+                </a>
+            </div>
+            
+            <div class="login-footer">
+                Еще нет аккаунта? <a href="register.html">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Переключение видимости пароля
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Обработка формы входа
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoading = document.getElementById('btnLoading');
+            const message = document.getElementById('message');
+            
+            // Валидация
+            if (!email || !password) {
+                showMessage('Заполните все поля', 'error');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showMessage('Введите корректный email', 'error');
+                return;
+            }
+            
+            // Показать загрузку
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'flex';
+            
+            // Сохранить email для "запомнить меня"
+            if (document.getElementById('remember').checked) {
+                localStorage.setItem('rememberedEmail', email);
+            }
+            
+            // Имитация запроса
+            setTimeout(() => {
+                // Здесь будет реальный запрос к Firebase
+                // Пока используем демо-авторизацию
+                
+                if (email === 'demo@soundcollab.com' && password === 'demo123') {
+                    // Успешный вход
+                    const user = {
+                        id: 'demo-user-123',
+                        email: email,
+                        name: 'Демо Пользователь',
+                        avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff',
+                        isPremium: true,
+                        stats: {
+                            projects: 5,
+                            tracks: 12,
+                            collaborations: 3,
+                            aiGenerations: 7
+                        }
+                    };
+                    
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('isAuthenticated', 'true');
+                    localStorage.setItem('isDemoMode', 'true');
+                    
+                    showMessage('✅ Успешный вход! Перенаправление...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                    
+                } else {
+                    // Ошибка входа
+                    showMessage('❌ Неверный email или пароль. Используйте demo@soundcollab.com / demo123', 'error');
+                    btn.disabled = false;
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                }
+            }, 1500);
+            
+            function showMessage(text, type) {
+                message.textContent = text;
+                message.className = `message ${type}`;
+                message.style.display = 'block';
+                
+                if (type === 'success') {
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                    }, 3000);
+                }
+            }
+            
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+        });
+        
+        // Демо-режим
+        document.getElementById('demoBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const demoUser = {
+                id: 'demo-user-' + Date.now(),
+                email: 'demo@soundcollab.com',
+                name: 'Демо Пользователь',
+                avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff',
+                isPremium: true,
+                stats: {
+                    projects: 5,
+                    tracks: 12,
+                    collaborations: 3,
+                    aiGenerations: 7
+                }
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(demoUser));
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('isDemoMode', 'true');
+            
+            window.location.href = 'dashboard.html';
+        });
+        
+        // Восстановить сохраненный email
+        window.addEventListener('load', function() {
+            const rememberedEmail = localStorage.getItem('rememberedEmail');
+            if (rememberedEmail) {
+                document.getElementById('email').value = rememberedEmail;
+                document.getElementById('remember').checked = true;
+            }
+            
+            // Тестовые данные для удобства
+            document.getElementById('email').value = 'demo@soundcollab.com';
+            document.getElementById('password').value = 'demo123';
+        });
+    </script>
+</body>
+</html>
