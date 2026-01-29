@@ -488,5 +488,25 @@
         }
     }, 3000);
 </script>
+    <script>
+    // Умная загрузка dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('SoundCollab загружается...');
+        
+        // Ждем 1 секунду для инициализации
+        setTimeout(() => {
+            console.log('Переход на dashboard...');
+            window.location.href = 'dashboard.html';
+        }, 1000);
+    });
+    
+    // Fallback если что-то пошло не так
+    setTimeout(() => {
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+            console.warn('Авто-редирект не сработал, делаем принудительный');
+            window.location.href = 'dashboard.html';
+        }
+    }, 3000);
+</script>
 </body>
 </html>
