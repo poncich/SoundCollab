@@ -401,5 +401,93 @@
             }
         });
     </script>
+    <!-- Простой Firebase скрипт -->
+<script src="firebase-auth.js"></script>
+
+<script>
+// Простой обработчик формы входа
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const button = e.target.querySelector('button[type="submit"]');
+  
+  // Валидация
+  if (!email || !password) {
+    alert('Заполните все поля');
+    return;
+  }
+  
+  // Показываем загрузку
+  const originalText = button.textContent;
+  button.textContent = 'Вход...';
+  button.disabled = true;
+  
+  try {
+    // Ждем загрузки Firebase
+    if (!window.isFirebaseLoaded) {
+      await new Promise(resolve => {
+        const check = setInterval(() => {
+          if (window.isFirebaseLoaded) {
+            clearInterval(check);
+            resolve();
+          }
+        }, 100);
+        
+        // Таймаут 3 секунды
+        setTimeout(() => {
+          clearInterval(check);
+          throw new Error('Firebase не загрузился. Используйте демо-режим.');
+        }, 3000);
+      });
+    }
+    
+    // Пытаемся войти
+    const user = await window.loginUser(email, password);
+    
+    alert(`Добро пожаловать, ${user.displayName}!`);
+    
+    // Редирект на дашборд
+    window.location.href = 'dashboard.html';
+    
+  } catch (error) {
+    console.error('Ошибка:', error);
+    alert(error.message || 'Ошибка входа. Используйте демо-режим.');
+    
+    // Восстанавливаем кнопку
+    button.textContent = originalText;
+    button.disabled = false;
+  }
+});
+
+// Демо-режим
+document.getElementById('demoButton').addEventListener('click', function(e) {
+  e.preventDefault();
+  
+  // Создаем демо-пользователя
+  const demoUser = {
+    uid: 'demo-user-123',
+    email: 'demo@soundcollab.com',
+    displayName: 'Демо Пользователь',
+    isPremium: true,
+    avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff',
+    stats: {
+      projects: 3,
+      tracks: 8,
+      collaborations: 2
+    }
+  };
+  
+  // Сохраняем
+  localStorage.setItem('currentUser', JSON.stringify(demoUser));
+  localStorage.setItem('isAuthenticated', 'true');
+  localStorage.setItem('isDemoMode', 'true');
+  
+  alert('Демо-режим активирован!');
+  window.location.href = 'dashboard.html';
+});
+</script>
+    login.html
 </body>
 </html>
