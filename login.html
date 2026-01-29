@@ -3,532 +3,402 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход - SoundCollab</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" href="https://i.imgur.com/8kLxQ9p.png" type="image/x-icon">
+    <title>SoundCollab - Вход</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        .auth-page {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, 
-                rgba(18, 18, 18, 0.95) 0%, 
-                rgba(30, 30, 30, 0.95) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .auth-page::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
-            z-index: 0;
-        }
-        
-        .auth-container {
-            width: 100%;
-            max-width: 450px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .auth-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .auth-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        
-        .auth-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .auth-tab {
-            flex: 1;
+        .login-title {
             text-align: center;
-            padding: 18px 0;
-            cursor: pointer;
-            color: #b0b0b0;
-            font-weight: 500;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .auth-tab:hover {
+            margin-bottom: 30px;
             color: white;
-        }
-        
-        .auth-tab.active {
-            color: white;
-            border-bottom-color: #667eea;
-        }
-        
-        .auth-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 3px;
-            background: #667eea;
-            border-radius: 3px;
-        }
-        
-        .auth-form {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .auth-form.active {
-            display: block;
+            font-size: 28px;
         }
         
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
-            color: white;
+            color: #a0a0a0;
             font-size: 14px;
         }
         
         .form-input {
             width: 100%;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             color: white;
-            font-size: 15px;
-            transition: all 0.3s ease;
+            font-size: 16px;
+            transition: all 0.3s;
         }
         
         .form-input:focus {
             outline: none;
             border-color: #667eea;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.15);
         }
         
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #a0a0a0;
         }
         
-        .auth-btn {
-            width: 100%;
-            padding: 18px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .auth-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .auth-divider {
+        .checkbox-label {
             display: flex;
             align-items: center;
-            margin: 30px 0;
-            color: #b0b0b0;
-            font-size: 14px;
+            gap: 8px;
+            cursor: pointer;
         }
         
-        .auth-divider::before,
-        .auth-divider::after {
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: #666;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
             content: '';
-            flex: 1;
+            position: absolute;
+            top: 50%;
+            width: 45%;
             height: 1px;
             background: rgba(255, 255, 255, 0.1);
         }
         
-        .auth-divider span {
-            padding: 0 15px;
+        .divider::before {
+            left: 0;
         }
         
-        .demo-login {
-            text-align: center;
+        .divider::after {
+            right: 0;
         }
         
-        .demo-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .demo-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .auth-footer {
+        .demo-section {
             text-align: center;
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #b0b0b0;
+        }
+        
+        .btn-demo {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-demo:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .demo-description {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
             font-size: 14px;
         }
         
-        .auth-footer a {
+        .login-footer a {
             color: #667eea;
             text-decoration: none;
         }
         
-        .auth-footer a:hover {
+        .login-footer a:hover {
             text-decoration: underline;
         }
         
-        .back-btn {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            z-index: 2;
+        .error-message {
+            padding: 10px 15px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 6px;
+            color: #ef4444;
+            margin-bottom: 20px;
+            display: none;
         }
         
-        @media (max-width: 768px) {
-            .auth-box {
-                padding: 30px 25px;
-            }
-            
-            .auth-tab {
-                padding: 15px 0;
-                font-size: 14px;
-            }
-            
-            .form-input {
-                padding: 14px 18px;
-            }
-            
-            .back-btn {
-                top: 20px;
-                left: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .auth-box {
-                padding: 25px 20px;
-            }
-            
-            .auth-tabs {
-                margin-bottom: 25px;
-            }
-            
-            .auth-tab {
-                padding: 12px 0;
-            }
-            
-            .form-group {
-                margin-bottom: 20px;
-            }
+        .success-message {
+            padding: 10px 15px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 6px;
+            color: #10b981;
+            margin-bottom: 20px;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Кнопка назад -->
-    <div class="back-btn">
-        <a href="index.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
-            ← На главную
-        </a>
-    </div>
+    <div class="container">
+        <!-- Навигация -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <a href="index.html">SoundCollab</a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">На главную</a>
+            </div>
+        </nav>
 
-    <!-- Основной контент -->
-    <div class="auth-page">
-        <div class="auth-container">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <span>🎵</span>
-                    <span style="background: linear-gradient(45deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                        SoundCollab
-                    </span>
+        <!-- Форма входа -->
+        <div class="login-container">
+            <h1 class="login-title">SoundCollab</h1>
+            <p style="text-align: center; color: #a0a0a0; margin-bottom: 30px;">
+                Добро пожаловать в мир музыки
+            </p>
+            
+            <!-- Сообщения об ошибках/успехе -->
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" 
+                           id="loginEmail" 
+                           class="form-input" 
+                           placeholder="your@email.com"
+                           required>
                 </div>
-                <p style="color: #b0b0b0; font-size: 16px;">
-                    Добро пожаловать в мир музыки
+                
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" 
+                           id="loginPassword" 
+                           class="form-input" 
+                           placeholder="********"
+                           required>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Запомнить меня</span>
+                    </label>
+                    <a href="#" class="forgot-password">Забыли пароль?</a>
+                </div>
+                
+                <button type="submit" class="btn-login" id="loginButton">
+                    Войти в аккаунт
+                </button>
+            </form>
+            
+            <div class="divider">или</div>
+            
+            <div class="demo-section">
+                <a href="dashboard.html?demo=true" class="btn-demo" id="demoButton">
+                    Попробовать демо-режим
+                </a>
+                <p class="demo-description">
+                    Без регистрации, с демо-данными
                 </p>
             </div>
             
-            <div class="auth-box">
-                <!-- Вкладки -->
-                <div class="auth-tabs">
-                    <div class="auth-tab active" data-tab="login">Вход</div>
-                    <div class="auth-tab" data-tab="register">Регистрация</div>
-                </div>
-                
-                <!-- Форма входа -->
-                <form id="login-form" class="auth-form active">
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" 
-                               class="form-input" 
-                               placeholder="your@email.com" 
-                               required
-                               id="login-email">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Пароль</label>
-                        <input type="password" 
-                               class="form-input" 
-                               placeholder="••••••••" 
-                               required
-                               id="login-password">
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" style="width: 16px; height: 16px;">
-                            <span style="color: #b0b0b0; font-size: 14px;">Запомнить меня</span>
-                        </label>
-                        <a href="#" style="color: #667eea; font-size: 14px; text-decoration: none;">Забыли пароль?</a>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary auth-btn" id="login-submit">
-                        Войти в аккаунт
-                    </button>
-                </form>
-                
-                <!-- Форма регистрации -->
-                <form id="register-form" class="auth-form">
-                    <div class="form-group">
-                        <label class="form-label">Имя</label>
-                        <input type="text" 
-                               class="form-input" 
-                               placeholder="Как вас зовут?" 
-                               required
-                               id="register-name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" 
-                               class="form-input" 
-                               placeholder="your@email.com" 
-                               required
-                               id="register-email">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Пароль</label>
-                        <input type="password" 
-                               class="form-input" 
-                               placeholder="••••••••" 
-                               required
-                               id="register-password">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Повторите пароль</label>
-                        <input type="password" 
-                               class="form-input" 
-                               placeholder="••••••••" 
-                               required
-                               id="register-confirm">
-                    </div>
-                    
-                    <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 25px; cursor: pointer;">
-                        <input type="checkbox" style="margin-top: 3px; width: 16px; height: 16px;">
-                        <span style="color: #b0b0b0; font-size: 14px; line-height: 1.4;">
-                            Я соглашаюсь с 
-                            <a href="#" style="color: #667eea;">Условиями использования</a> 
-                            и 
-                            <a href="#" style="color: #667eea;">Политикой конфиденциальности</a>
-                        </span>
-                    </label>
-                    
-                    <button type="submit" class="btn btn-primary auth-btn" id="register-submit">
-                        Создать аккаунт
-                    </button>
-                </form>
-                
-                <!-- Разделитель -->
-                <div class="auth-divider">
-                    <span>или</span>
-                </div>
-                
-                <!-- Демо вход -->
-                <div class="demo-login">
-                    <button class="demo-btn" id="demo-login-btn">
-                        <span>🚀</span>
-                        Попробовать демо-режим
-                    </button>
-                    <p style="color: #b0b0b0; font-size: 14px; margin-top: 15px;">
-                        Без регистрации, с демо-данными
-                    </p>
-                </div>
-            </div>
-            
-            <div class="auth-footer">
-                Вернуться на <a href="index.html">главную страницу</a>
+            <div class="login-footer">
+                Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
             </div>
         </div>
     </div>
 
-    <!-- Подключение скриптов -->
-    <script src="js/auth.js"></script>
+    <!-- Firebase синхронная версия -->
+    <script src="firebase-sync.js"></script>
+    
+    <!-- Скрипт для обработки входа -->
     <script>
-        // Переключение между вкладками
         document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.auth-tab');
-            const forms = document.querySelectorAll('.auth-form');
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const demoButton = document.getElementById('demoButton');
             
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabName = this.dataset.tab;
+            // Обработчик формы входа
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+                
+                // Валидация
+                if (!email || !password) {
+                    showError('Пожалуйста, заполните все поля');
+                    return;
+                }
+                
+                if (!validateEmail(email)) {
+                    showError('Пожалуйста, введите корректный email');
+                    return;
+                }
+                
+                // Показываем загрузку
+                loginButton.textContent = 'Вход...';
+                loginButton.disabled = true;
+                hideMessages();
+                
+                try {
+                    // Ждем загрузки Firebase (если еще не загружен)
+                    if (!window.isFirebaseLoaded) {
+                        await new Promise(resolve => {
+                            const checkInterval = setInterval(() => {
+                                if (window.isFirebaseLoaded) {
+                                    clearInterval(checkInterval);
+                                    resolve();
+                                }
+                            }, 100);
+                            
+                            // Таймаут 5 секунд
+                            setTimeout(() => {
+                                clearInterval(checkInterval);
+                                throw new Error('Firebase загружается слишком долго');
+                            }, 5000);
+                        });
+                    }
                     
-                    // Убираем активный класс у всех
-                    tabs.forEach(t => t.classList.remove('active'));
-                    forms.forEach(f => f.classList.remove('active'));
+                    // Выполняем вход
+                    const user = await window.firebaseAuthFunctions.login(email, password);
                     
-                    // Добавляем активный класс текущему
-                    this.classList.add('active');
-                    document.getElementById(`${tabName}-form`).classList.add('active');
-                });
-            });
-            
-            // Проверяем параметр URL для автоматического выбора вкладки
-            const urlParams = new URLSearchParams(window.location.search);
-            const action = urlParams.get('action');
-            
-            if (action === 'register') {
-                document.querySelector('[data-tab="register"]').click();
-            }
-            
-            // Демо вход
-            document.getElementById('demo-login-btn').addEventListener('click', function() {
-                const names = ['Алексей', 'Мария', 'Денис', 'София', 'Максим', 'Анна'];
-                const randomName = names[Math.floor(Math.random() * names.length)];
-                
-                const user = {
-                    uid: 'demo-user-' + Date.now(),
-                    email: 'demo@soundcollab.com',
-                    displayName: randomName + ' (Демо)',
-                    photoURL: '',
-                    isDemo: true,
-                    createdAt: new Date().toISOString()
-                };
-                
-                localStorage.setItem('soundcollab_user', JSON.stringify(user));
-                localStorage.setItem('soundcollab_premium', 'false');
-                
-                // Показываем уведомление
-                showNotification('Демо-режим активирован', 'Перенаправляем в личный кабинет...', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            });
-            
-            // Функция уведомлений
-            function showNotification(title, message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: ${type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 
-                                 type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 
-                                 'linear-gradient(135deg, #667eea, #764ba2)'};
-                    color: white;
-                    padding: 16px 24px;
-                    border-radius: 12px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                    z-index: 10000;
-                    animation: slideIn 0.3s ease;
-                    max-width: 350px;
-                    backdrop-filter: blur(10px);
-                    border: 1px solid rgba(255,255,255,0.1);
-                `;
-                
-                notification.innerHTML = `
-                    <div style="display: flex; align-items: flex-start; gap: 12px;">
-                        <div style="font-size: 20px;">
-                            ${type === 'success' ? '✅' : 
-                              type === 'error' ? '❌' : 'ℹ️'}
-                        </div>
-                        <div>
-                            <div style="font-weight: 600; margin-bottom: 4px;">${title}</div>
-                            <div style="font-size: 14px; opacity: 0.9;">${message}</div>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(notification);
-                
-                // Удаляем через 4 секунды
-                setTimeout(() => {
-                    notification.style.animation = 'slideOut 0.3s ease';
+                    // Показываем успех
+                    showSuccess(`Добро пожаловать, ${user.displayName}!`);
+                    
+                    // Сохраняем настройки "Запомнить меня"
+                    if (rememberMe) {
+                        localStorage.setItem('rememberMe', 'true');
+                        localStorage.setItem('savedEmail', email);
+                    }
+                    
+                    // Редирект через 1.5 секунды
                     setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 300);
-                }, 4000);
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error('Ошибка входа:', error);
+                    showError(error.message);
+                    
+                    // Восстанавливаем кнопку
+                    loginButton.textContent = 'Войти в аккаунт';
+                    loginButton.disabled = false;
+                }
+            });
+            
+            // Обработчик демо-режима
+            demoButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Устанавливаем демо-режим
+                localStorage.setItem('isDemoMode', 'true');
+                localStorage.setItem('currentUser', JSON.stringify({
+                    uid: 'demo-user-123',
+                    email: 'demo@soundcollab.com',
+                    displayName: 'Демо Пользователь',
+                    isPremium: true,
+                    avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff'
+                }));
+                localStorage.setItem('isAuthenticated', 'true');
+                
+                // Редирект
+                window.location.href = 'dashboard.html?demo=true';
+            });
+            
+            // Восстановление сохраненного email
+            if (localStorage.getItem('rememberMe') === 'true') {
+                const savedEmail = localStorage.getItem('savedEmail');
+                if (savedEmail) {
+                    document.getElementById('loginEmail').value = savedEmail;
+                    document.getElementById('rememberMe').checked = true;
+                }
             }
             
-            // Добавляем стили для анимаций
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
+            // Функции утилиты
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+            
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            }
+            
+            function hideMessages() {
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+            }
         });
     </script>
 </body>
