@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoundCollab - Вход</title>
+    <style>
+        /* ПРОСТЫЕ СТИЛИ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #aaa;
+        }
+        
+        .forgot {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .forgot:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: #666;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .btn-demo {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            color: #667eea;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        .btn-demo:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .demo-note {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            display: block;
+        }
+        
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>SoundCollab</h1>
+        </div>
+        
+        <p class="subtitle">Добро пожаловать в мир музыки</p>
+        
+        <div id="message" class="message"></div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="your@email.com" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Пароль</label>
+                <input type="password" id="password" placeholder="********" required>
+            </div>
+            
+            <div class="options">
+                <label class="checkbox">
+                    <input type="checkbox" id="remember">
+                    <span>Запомнить меня</span>
+                </label>
+                <a href="#" class="forgot" onclick="alert('Функция в разработке')">Забыли пароль?</a>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="loginBtn">
+                Войти в аккаунт
+            </button>
+        </form>
+        
+        <div class="divider">или</div>
+        
+        <a href="#" class="btn-demo" id="demoBtn">Попробовать демо-режим</a>
+        <p class="demo-note">Без регистрации, с демо-данными</p>
+        
+        <div class="footer">
+            Нет аккаунта? <a href="register-fixed.html">Зарегистрироваться</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK и наш скрипт -->
+    <script src="firebase-simple.js"></script>
+    
+    <script>
+        // Глобальные функции
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+            
+            // Автоскрытие для успеха
+            if (type === 'success') {
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        // Обработчик формы входа
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Валидация
+            if (!email || !password) {
+                showMessage('Заполните все поля', 'error');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showMessage('Введите корректный email', 'error');
+                return;
+            }
+            
+            // Показываем загрузку
+            loginBtn.textContent = 'Вход...';
+            loginBtn.disabled = true;
+            showMessage('Подключение к серверу...', 'success');
+            
+            // Ждем загрузку Firebase
+            if (!window.firebaseLoaded) {
+                await new Promise(resolve => {
+                    const check = setInterval(() => {
+                        if (window.firebaseLoaded) {
+                            clearInterval(check);
+                            resolve();
+                        }
+                    }, 100);
+                    
+                    // Таймаут 5 секунд
+                    setTimeout(() => {
+                        clearInterval(check);
+                        resolve();
+                    }, 5000);
+                });
+            }
+            
+            try {
+                // Пытаемся войти
+                const user = await window.loginUser(email, password);
+                
+                // Успех
+                showMessage(`✅ Добро пожаловать, ${user.displayName}!`, 'success');
+                
+                // Сохраняем "запомнить меня"
+                if (document.getElementById('remember').checked) {
+                    localStorage.setItem('savedEmail', email);
+                }
+                
+                // Редирект через 1.5 секунды
+                setTimeout(() => {
+                    window.location.href = 'dashboard-fixed.html';
+                }, 1500);
+                
+            } catch (error) {
+                // Ошибка
+                console.error('Ошибка входа:', error);
+                showMessage('❌ ' + error.message, 'error');
+                
+                // Восстанавливаем кнопку
+                loginBtn.textContent = 'Войти в аккаунт';
+                loginBtn.disabled = false;
+            }
+        });
+        
+        // Демо-режим
+        document.getElementById('demoBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Создаем демо-пользователя
+            const demoUser = {
+                uid: 'demo-user-' + Date.now(),
+                email: 'demo@soundcollab.com',
+                displayName: 'Демо Пользователь',
+                isPremium: true,
+                avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff',
+                stats: {
+                    projects: 3,
+                    tracks: 8,
+                    collaborations: 2
+                }
+            };
+            
+            // Сохраняем
+            localStorage.setItem('currentUser', JSON.stringify(demoUser));
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('isDemoMode', 'true');
+            
+            // Показываем сообщение
+            showMessage('🎮 Активирован демо-режим! Перенаправление...', 'success');
+            
+            // Редирект
+            setTimeout(() => {
+                window.location.href = 'dashboard-fixed.html';
+            }, 1000);
+        });
+        
+        // Автозаполнение для теста (опционально)
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Страница входа загружена');
+            
+            // Автозаполнение для быстрого тестирования
+            // Удалите эти строки в продакшене:
+            document.getElementById('email').value = 'test@example.com';
+            document.getElementById('password').value = '123456';
+            
+            // Восстановить сохраненный email
+            const savedEmail = localStorage.getItem('savedEmail');
+            if (savedEmail) {
+                document.getElementById('email').value = savedEmail;
+                document.getElementById('remember').checked = true;
+            }
+        });
+    </script>
+</body>
+</html>
