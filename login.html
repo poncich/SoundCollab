@@ -9,7 +9,7 @@
         .login-container {
             max-width: 400px;
             margin: 50px auto;
-            padding: 30px;
+            padding: 40px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -18,9 +18,15 @@
         
         .login-title {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             color: white;
-            font-size: 28px;
+            font-size: 32px;
+        }
+        
+        .login-subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #a0a0a0;
         }
         
         .form-group {
@@ -95,12 +101,6 @@
         .btn-login:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
         }
         
         .divider {
@@ -183,40 +183,24 @@
             margin-bottom: 20px;
             display: none;
         }
-        
-        .success-message {
-            padding: 10px 15px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 6px;
-            color: #10b981;
-            margin-bottom: 20px;
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Навигация -->
-        <nav class="navbar">
-            <div class="nav-brand">
-                <a href="index.html">SoundCollab</a>
-            </div>
-            <div class="nav-links">
-                <a href="index.html">На главную</a>
-            </div>
-        </nav>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">SoundCollab</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">На главную</a>
+        </div>
+    </nav>
 
-        <!-- Форма входа -->
+    <div class="container">
         <div class="login-container">
             <h1 class="login-title">SoundCollab</h1>
-            <p style="text-align: center; color: #a0a0a0; margin-bottom: 30px;">
-                Добро пожаловать в мир музыки
-            </p>
+            <p class="login-subtitle">Добро пожаловать в мир музыки</p>
             
-            <!-- Сообщения об ошибках/успехе -->
             <div id="errorMessage" class="error-message"></div>
-            <div id="successMessage" class="success-message"></div>
             
             <form id="loginForm">
                 <div class="form-group">
@@ -253,7 +237,7 @@
             <div class="divider">или</div>
             
             <div class="demo-section">
-                <a href="dashboard.html?demo=true" class="btn-demo" id="demoButton">
+                <a href="#" class="btn-demo" id="demoButton">
                     Попробовать демо-режим
                 </a>
                 <p class="demo-description">
@@ -267,227 +251,126 @@
         </div>
     </div>
 
-    <!-- Firebase синхронная версия -->
-    <script src="firebase-sync.js"></script>
+    <!-- СИМПЛ ФАЙЕРБЕЙС СКРИПТ -->
+    <script src="firebase-simple-no-modules.js"></script>
     
-    <!-- Скрипт для обработки входа -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const loginButton = document.getElementById('loginButton');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-            const demoButton = document.getElementById('demoButton');
+        // Простой обработчик входа
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Обработчик формы входа
-            loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('loginEmail').value.trim();
-                const password = document.getElementById('loginPassword').value;
-                const rememberMe = document.getElementById('rememberMe').checked;
-                
-                // Валидация
-                if (!email || !password) {
-                    showError('Пожалуйста, заполните все поля');
-                    return;
-                }
-                
-                if (!validateEmail(email)) {
-                    showError('Пожалуйста, введите корректный email');
-                    return;
-                }
-                
-                // Показываем загрузку
-                loginButton.textContent = 'Вход...';
-                loginButton.disabled = true;
-                hideMessages();
-                
-                try {
-                    // Ждем загрузки Firebase (если еще не загружен)
-                    if (!window.isFirebaseLoaded) {
-                        await new Promise(resolve => {
-                            const checkInterval = setInterval(() => {
-                                if (window.isFirebaseLoaded) {
-                                    clearInterval(checkInterval);
-                                    resolve();
-                                }
-                            }, 100);
-                            
-                            // Таймаут 5 секунд
-                            setTimeout(() => {
-                                clearInterval(checkInterval);
-                                throw new Error('Firebase загружается слишком долго');
-                            }, 5000);
-                        });
-                    }
-                    
-                    // Выполняем вход
-                    const user = await window.firebaseAuthFunctions.login(email, password);
-                    
-                    // Показываем успех
-                    showSuccess(`Добро пожаловать, ${user.displayName}!`);
-                    
-                    // Сохраняем настройки "Запомнить меня"
-                    if (rememberMe) {
-                        localStorage.setItem('rememberMe', 'true');
-                        localStorage.setItem('savedEmail', email);
-                    }
-                    
-                    // Редирект через 1.5 секунды
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                    
-                } catch (error) {
-                    console.error('Ошибка входа:', error);
-                    showError(error.message);
-                    
-                    // Восстанавливаем кнопку
-                    loginButton.textContent = 'Войти в аккаунт';
-                    loginButton.disabled = false;
-                }
-            });
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const button = document.getElementById('loginButton');
+            const errorDiv = document.getElementById('errorMessage');
             
-            // Обработчик демо-режима
-            demoButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Устанавливаем демо-режим
-                localStorage.setItem('isDemoMode', 'true');
-                localStorage.setItem('currentUser', JSON.stringify({
-                    uid: 'demo-user-123',
-                    email: 'demo@soundcollab.com',
-                    displayName: 'Демо Пользователь',
-                    isPremium: true,
-                    avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff'
-                }));
-                localStorage.setItem('isAuthenticated', 'true');
-                
-                // Редирект
-                window.location.href = 'dashboard.html?demo=true';
-            });
+            // Скрыть ошибку
+            errorDiv.style.display = 'none';
             
-            // Восстановление сохраненного email
-            if (localStorage.getItem('rememberMe') === 'true') {
-                const savedEmail = localStorage.getItem('savedEmail');
-                if (savedEmail) {
-                    document.getElementById('loginEmail').value = savedEmail;
-                    document.getElementById('rememberMe').checked = true;
-                }
+            // Валидация
+            if (!email || !password) {
+                showError('Заполните все поля');
+                return;
             }
             
-            // Функции утилиты
-            function validateEmail(email) {
-                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
+            if (!email.includes('@')) {
+                showError('Введите корректный email');
+                return;
+            }
+            
+            // Показать загрузку
+            const originalText = button.textContent;
+            button.textContent = 'Вход...';
+            button.disabled = true;
+            
+            try {
+                // Ждем загрузки Firebase
+                if (!window.isFirebaseLoaded) {
+                    await waitForFirebase(3000);
+                }
+                
+                // Вход через Firebase
+                const user = await window.loginUser(email, password);
+                
+                // Успех - редирект на дашборд
+                window.location.href = 'dashboard.html';
+                
+            } catch (error) {
+                console.error('Ошибка входа:', error);
+                showError(error.message);
+                
+                // Восстановить кнопку
+                button.textContent = originalText;
+                button.disabled = false;
             }
             
             function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.style.display = 'block';
-                successMessage.style.display = 'none';
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
             }
             
-            function showSuccess(message) {
-                successMessage.textContent = message;
-                successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
-            }
-            
-            function hideMessages() {
-                errorMessage.style.display = 'none';
-                successMessage.style.display = 'none';
+            function waitForFirebase(timeout) {
+                return new Promise((resolve, reject) => {
+                    if (window.isFirebaseLoaded) {
+                        resolve();
+                        return;
+                    }
+                    
+                    const check = setInterval(() => {
+                        if (window.isFirebaseLoaded) {
+                            clearInterval(check);
+                            resolve();
+                        }
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        clearInterval(check);
+                        reject(new Error('Firebase не загрузился. Используйте демо-режим.'));
+                    }, timeout);
+                });
             }
         });
-    </script>
-    <!-- Простой Firebase скрипт -->
-<script src="firebase-auth.js"></script>
-
-<script>
-// Простой обработчик формы входа
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  const button = e.target.querySelector('button[type="submit"]');
-  
-  // Валидация
-  if (!email || !password) {
-    alert('Заполните все поля');
-    return;
-  }
-  
-  // Показываем загрузку
-  const originalText = button.textContent;
-  button.textContent = 'Вход...';
-  button.disabled = true;
-  
-  try {
-    // Ждем загрузки Firebase
-    if (!window.isFirebaseLoaded) {
-      await new Promise(resolve => {
-        const check = setInterval(() => {
-          if (window.isFirebaseLoaded) {
-            clearInterval(check);
-            resolve();
-          }
-        }, 100);
         
-        // Таймаут 3 секунды
-        setTimeout(() => {
-          clearInterval(check);
-          throw new Error('Firebase не загрузился. Используйте демо-режим.');
-        }, 3000);
-      });
-    }
-    
-    // Пытаемся войти
-    const user = await window.loginUser(email, password);
-    
-    alert(`Добро пожаловать, ${user.displayName}!`);
-    
-    // Редирект на дашборд
-    window.location.href = 'dashboard.html';
-    
-  } catch (error) {
-    console.error('Ошибка:', error);
-    alert(error.message || 'Ошибка входа. Используйте демо-режим.');
-    
-    // Восстанавливаем кнопку
-    button.textContent = originalText;
-    button.disabled = false;
-  }
-});
-
-// Демо-режим
-document.getElementById('demoButton').addEventListener('click', function(e) {
-  e.preventDefault();
-  
-  // Создаем демо-пользователя
-  const demoUser = {
-    uid: 'demo-user-123',
-    email: 'demo@soundcollab.com',
-    displayName: 'Демо Пользователь',
-    isPremium: true,
-    avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff',
-    stats: {
-      projects: 3,
-      tracks: 8,
-      collaborations: 2
-    }
-  };
-  
-  // Сохраняем
-  localStorage.setItem('currentUser', JSON.stringify(demoUser));
-  localStorage.setItem('isAuthenticated', 'true');
-  localStorage.setItem('isDemoMode', 'true');
-  
-  alert('Демо-режим активирован!');
-  window.location.href = 'dashboard.html';
-});
-</script>
-    login.html
+        // Обработчик демо-режима
+        document.getElementById('demoButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Создать демо-пользователя
+            const demoUser = {
+                uid: 'demo-user-' + Date.now(),
+                email: 'demo@soundcollab.com',
+                displayName: 'Демо Пользователь',
+                isPremium: true,
+                avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=667eea&color=fff',
+                stats: {
+                    projects: 5,
+                    tracks: 12,
+                    collaborations: 3,
+                    aiGenerations: 7
+                }
+            };
+            
+            // Сохранить
+            localStorage.setItem('currentUser', JSON.stringify(demoUser));
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('isDemoMode', 'true');
+            
+            // Перейти на дашборд
+            window.location.href = 'dashboard.html';
+        });
+        
+        // Восстановить сохраненный email
+        window.addEventListener('load', function() {
+            const savedEmail = localStorage.getItem('savedEmail');
+            if (savedEmail) {
+                document.getElementById('loginEmail').value = savedEmail;
+                document.getElementById('rememberMe').checked = true;
+            }
+            
+            // Автозаполнение для теста
+            document.getElementById('loginEmail').value = 'test@example.com';
+            document.getElementById('loginPassword').value = '123456';
+        });
+    </script>
 </body>
 </html>
