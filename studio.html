@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студия - SoundCollab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Стили студии */
+        :root {
+            --studio-sidebar: 280px;
+            --toolbar-height: 60px;
+            --track-height: 120px;
+            --waveform-height: 80px;
+            --mixer-width: 320px;
+            --transport-height: 100px;
+            --primary-rgb: 102, 126, 234;
+            --secondary-rgb: 118, 75, 162;
+        }
+        
+        .studio {
+            display: flex;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #121212 100%);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Эффекты фона */
+        .studio-background {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(var(--secondary-rgb), 0.05) 0%, transparent 50%),
+                linear-gradient(45deg, rgba(0,0,0,0.2) 0%, transparent 100%);
+            z-index: 0;
+        }
+        
+        /* Боковая панель инструментов */
+        .studio-sidebar {
+            width: var(--studio-sidebar);
+            background: rgba(16, 18, 24, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .studio-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Основной контент */
+        .studio-main {
+            flex: 1;
+            margin-left: var(--studio-sidebar);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Панель инструментов */
+        .toolbar {
+            height: var(--toolbar-height);
+            background: rgba(20, 22, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+        
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .toolbar-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .toolbar-btn:hover {
+            background: rgba(var(--primary-rgb), 0.15);
+            border-color: rgba(var(--primary-rgb), 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .toolbar-btn.active {
+            background: rgba(var(--primary-rgb), 0.2);
+            border-color: rgba(var(--primary-rgb), 0.5);
+            color: #667eea;
+        }
+        
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        /* Транспорт (Play/Pause/Stop) */
+        .transport {
+            height: var(--transport-height);
+            background: rgba(16, 18, 24, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .transport-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .transport-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .transport-btn:hover {
+            background: rgba(var(--primary-rgb), 0.15);
+            border-color: rgba(var(--primary-rgb), 0.3);
+            transform: scale(1.05);
+        }
+        
+        .play-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        
+        .play-btn:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b4a9e 100%);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .time-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            color: white;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Таймлайн и дорожки */
+        .timeline-section {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-container {
+            flex: 1;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .timeline-header {
+            height: 60px;
+            background: rgba(20, 22, 30, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 80;
+            display: flex;
+        }
+        
+        .time-ruler {
+            flex: 1;
+            position: relative;
+            height: 100%;
+        }
+        
+        .time-marker {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            padding-left: 0.5rem;
+        }
+        
+        /* Дорожки */
+        .tracks-container {
+            position: relative;
+            min-height: 600px;
+        }
+        
+        .track {
+            height: var(--track-height);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            transition: background 0.2s ease;
+        }
+        
+        .track:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .track-header {
+            width: 200px;
+            height: 100%;
+            background: rgba(16, 18, 24, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem;
+            position: sticky;
+            left: 0;
+            z-index: 70;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .track-color {
+            width: 12px;
+            height: 100%;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        
+        .track-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .track-name {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+        
+        .track-type {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .track-content {
+            position: absolute;
+            left: 200px;
+            top: 0;
+            right: 0;
+            height: 100%;
+            padding: 1rem;
+        }
+        
+        /* Клипы (аудио блоки) */
+        .clip {
+            position: absolute;
+            height: calc(var(--track-height) - 2rem);
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.3), rgba(var(--secondary-rgb), 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            cursor: move;
+            user-select: none;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .clip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .clip-content {
+            padding: 0.75rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .clip-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .clip-waveform {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .waveform-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Микшер */
+        .mixer-panel {
+            width: var(--mixer-width);
+            background: rgba(16, 18, 24, 0.95);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .mixer-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        /* Фейдеры */
+        .fader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .fader-label {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+        
+        .fader-track {
+            width: 6px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .fader-thumb {
+            width: 24px;
+            height: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            position: absolute;
+            left: -9px;
+            transform: translateY(-50%);
+            cursor: grab;
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .fader-thumb:hover {
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        
+        .fader-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* AI Панель */
+        .ai-panel {
+            background: linear-gradient(135deg, rgba(16, 18, 24, 0.9), rgba(20, 22, 30, 0.9));
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ai-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .ai-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .ai-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+        }
+        
+        .ai-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ai-btn {
+            padding: 0.875rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .ai-btn:hover {
+            background: rgba(var(--primary-rgb), 0.15);
+            border-color: rgba(var(--primary-rgb), 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .ai-btn i {
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, rgba(20, 22, 30, 0.95), rgba(16, 18, 24, 0.98));
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.2s;
+        }
+        
+        .modal-close:hover {
+            color: white;
+        }
+        
+        /* Анимации */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.5);
+            }
+        }
+        
+        @keyframes recording {
+            0%, 100% {
+                background: #ef4444;
+            }
+            50% {
+                background: #dc2626;
+            }
+        }
+        
+        .recording-active {
+            animation: recording 1s infinite;
+        }
+        
+        /* Прогресс бар */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Коллаборация */
+        .collab-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(var(--primary-rgb), 0.1);
+            border: 1px solid rgba(var(--primary-rgb), 0.2);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Библиотека сэмплов */
+        .sample-library {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .sample-item {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .sample-item:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+            border-color: rgba(var(--primary-rgb), 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1400px) {
+            .mixer-panel {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 200;
+                transition: right 0.3s ease;
+            }
+            
+            .mixer-panel.active {
+                right: 0;
+            }
+            
+            .mixer-toggle {
+                display: flex;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .studio-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .studio-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .studio-main {
+                margin-left: 0;
+            }
+            
+            .track-header {
+                width: 160px;
+            }
+            
+            .track-content {
+                left: 160px;
+            }
+        }
+        
+        /* Кастомный скролл */
+        .timeline-container::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+        
+        .timeline-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+        
+        .timeline-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+        }
+        
+        /* Горячие клавиши */
+        .shortcut-overlay {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(16, 18, 24, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            animation: slideInLeft 0.3s ease;
+        }
+        
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .shortcut-item:last-child {
+            border-bottom: none;
+        }
+        
+        .shortcut-key {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            color: white;
+        }
+        
+        /* Индикатор изменения */
+        .change-indicator {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(var(--primary-rgb), 0.1);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="studio">
+    <!-- Фон с эффектами -->
+    <div class="studio-background"></div>
+    
+    <!-- Боковая панель инструментов -->
+    <aside class="studio-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="studio-title">
+                <i class="fas fa-sliders-h"></i>
+                <span>SoundCollab Studio</span>
+            </div>
+            
+            <div class="collab-indicator">
+                <div class="online-dot"></div>
+                <span id="onlineCount">1 онлайн</span>
+            </div>
+        </div>
+        
+        <div class="sidebar-content" style="flex: 1; padding: 1.5rem; overflow-y: auto;">
+            <!-- Инструменты -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 0.875rem; color: rgba(255,255,255,0.5); margin-bottom: 1rem; text-transform: uppercase;">Инструменты</h3>
+                <div style="display: grid; gap: 0.5rem;">
+                    <button class="toolbar-btn" data-tool="select">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <span>Выделение</span>
+                    </button>
+                    <button class="toolbar-btn" data-tool="cut">
+                        <i class="fas fa-cut"></i>
+                        <span>Разрезать</span>
+                    </button>
+                    <button class="toolbar-btn" data-tool="draw">
+                        <i class="fas fa-pencil-alt"></i>
+                        <span>Рисование</span>
+                    </button>
+                    <button class="toolbar-btn" data-tool="automation">
+                        <i class="fas fa-wave-square"></i>
+                        <span>Автоматизация</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Библиотека сэмплов -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 0.875rem; color: rgba(255,255,255,0.5); margin-bottom: 1rem; text-transform: uppercase;">Библиотека</h3>
+                <div class="sample-library">
+                    <div class="sample-item" data-sample="kick">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Kick Drum</div>
+                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">808 • 120BPM</div>
+                    </div>
+                    <div class="sample-item" data-sample="snare">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Snare</div>
+                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Acoustic • Dry</div>
+                    </div>
+                    <div class="sample-item" data-sample="hat">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Hi-Hat</div>
+                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Closed • Tight</div>
+                    </div>
+                    <div class="sample-item" data-sample="bass">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Bass Synth</div>
+                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Sub • 808</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Эффекты -->
+            <div>
+                <h3 style="font-size: 0.875rem; color: rgba(255,255,255,0.5); margin-bottom: 1rem; text-transform: uppercase;">Эффекты</h3>
+                <div style="display: grid; gap: 0.5rem;">
+                    <button class="toolbar-btn" data-effect="reverb">
+                        <i class="fas fa-water"></i>
+                        <span>Reverb</span>
+                    </button>
+                    <button class="toolbar-btn" data-effect="delay">
+                        <i class="fas fa-redo-alt"></i>
+                        <span>Delay</span>
+                    </button>
+                    <button class="toolbar-btn" data-effect="compressor">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        <span>Compressor</span>
+                    </button>
+                    <button class="toolbar-btn" data-effect="eq">
+                        <i class="fas fa-chart-line"></i>
+                        <span>EQ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Сохранение -->
+        <div style="padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="progress-container">
+                <div class="progress-bar" id="saveProgress" style="width: 0%"></div>
+            </div>
+            <button class="toolbar-btn active" style="width: 100%; margin-top: 1rem;" onclick="saveProject()">
+                <i class="fas fa-save"></i>
+                <span>Сохранить проект</span>
+            </button>
+        </div>
+    </aside>
+    
+    <!-- Основной контент -->
+    <main class="studio-main">
+        <!-- Панель инструментов -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <button class="toolbar-btn" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="toolbar-btn" onclick="newProject()">
+                        <i class="fas fa-file"></i>
+                        <span>Новый</span>
+                    </button>
+                    <button class="toolbar-btn" onclick="openProject()">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Открыть</span>
+                    </button>
+                    <button class="toolbar-btn active" onclick="saveProject()">
+                        <i class="fas fa-save"></i>
+                        <span>Сохранить</span>
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; margin-left: 1rem;">
+                    <button class="toolbar-btn" onclick="undo()">
+                        <i class="fas fa-undo"></i>
+                        <span>Отменить</span>
+                    </button>
+                    <button class="toolbar-btn" onclick="redo()">
+                        <i class="fas fa-redo"></i>
+                        <span>Повторить</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="toolbar-right">
+                <button class="toolbar-btn" onclick="toggleMixer()">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Микшер</span>
+                </button>
+                <button class="toolbar-btn" onclick="toggleAIPanel()">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Помощник</span>
+                </button>
+                <button class="toolbar-btn" id="recordBtn" onclick="toggleRecording()">
+                    <i class="fas fa-circle"></i>
+                    <span>Запись</span>
+                </button>
+                <button class="toolbar-btn" onclick="exportProject()">
+                    <i class="fas fa-download"></i>
+                    <span>Экспорт</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Транспорт -->
+        <div class="transport">
+            <div class="transport-controls">
+                <button class="transport-btn" onclick="rewindToStart()">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="transport-btn" onclick="rewindBack()">
+                    <i class="fas fa-backward"></i>
+                </button>
+                <button class="play-btn transport-btn" id="playBtn" onclick="togglePlay()">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="transport-btn" onclick="stopPlayback()">
+                    <i class="fas fa-stop"></i>
+                </button>
+                <button class="transport-btn" onclick="fastForward()">
+                    <i class="fas fa-forward"></i>
+                </button>
+            </div>
+            
+            <div class="time-display" id="timeDisplay">
+                00:00:000
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="font-size: 0.875rem; color: rgba(255,255,255,0.7);">BPM:</div>
+                <input type="number" id="bpmInput" value="120" min="60" max="240" 
+                       style="width: 80px; padding: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: white; font-family: 'JetBrains Mono';">
+            </div>
+        </div>
+        
+        <!-- Таймлайн и дорожки -->
+        <div class="timeline-section">
+            <div class="timeline-container" id="timeline">
+                <!-- Хедер таймлайна -->
+                <div class="timeline-header">
+                    <div class="track-header" style="background: transparent;">
+                        <div style="font-weight: 600; color: rgba(255,255,255,0.7);">Дорожки</div>
+                    </div>
+                    <div class="time-ruler" id="timeRuler">
+                        <!-- Временные метки будут добавлены через JS -->
+                    </div>
+                </div>
+                
+                <!-- Контейнер дорожек -->
+                <div class="tracks-container" id="tracksContainer">
+                    <!-- Дорожки будут добавлены через JS -->
+                </div>
+            </div>
+            
+            <!-- Панель микшера -->
+            <div class="mixer-panel" id="mixerPanel">
+                <div class="mixer-title">
+                    <i class="fas fa-sliders-h" style
