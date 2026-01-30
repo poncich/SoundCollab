@@ -1,7 +1,7 @@
 /* Анимации для SoundCollab */
 
 /* Базовые анимации */
-@keyframes fadeIn {
+keyframes fadeIn {
     from {
         opacity: 0;
     }
