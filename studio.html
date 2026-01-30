@@ -1,3 +1,6 @@
+🎛️ ПОЛНЫЙ КОД СТУДИИ SOUNDCOLLAB
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -20,6 +23,7 @@
             --transport-height: 100px;
             --primary-rgb: 102, 126, 234;
             --secondary-rgb: 118, 75, 162;
+            --accent-rgb: 246, 211, 101;
         }
         
         .studio {
@@ -427,12 +431,23 @@
         
         /* AI Панель */
         .ai-panel {
-            background: linear-gradient(135deg, rgba(16, 18, 24, 0.9), rgba(20, 22, 30, 0.9));
-            border-radius: 16px;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 400px;
+            background: linear-gradient(135deg, rgba(16, 18, 24, 0.95), rgba(20, 22, 30, 0.98));
+            border-radius: 20px;
             padding: 1.5rem;
-            margin: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            animation: slideInUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .ai-panel.active {
+            display: block;
         }
         
         .ai-header {
@@ -467,16 +482,16 @@
         
         .ai-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
         
         .ai-btn {
-            padding: 0.875rem;
+            padding: 1rem;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             font-size: 0.875rem;
             font-weight: 500;
@@ -486,6 +501,7 @@
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
+            text-align: center;
         }
         
         .ai-btn:hover {
@@ -495,7 +511,7 @@
         }
         
         .ai-btn i {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             background-clip: text;
@@ -511,7 +527,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
-            z-index: 1000;
+            z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
@@ -573,14 +589,16 @@
         @keyframes recording {
             0%, 100% {
                 background: #ef4444;
+                box-shadow: 0 0 10px #ef4444;
             }
             50% {
                 background: #dc2626;
+                box-shadow: 0 0 20px #ef4444;
             }
         }
         
         .recording-active {
-            animation: recording 1s infinite;
+            animation: recording 1s infinite !important;
         }
         
         /* Прогресс бар */
@@ -644,46 +662,20 @@
             transform: translateY(-2px);
         }
         
-        /* Адаптивность */
-        @media (max-width: 1400px) {
-            .mixer-panel {
-                position: fixed;
-                right: -100%;
-                top: 0;
-                height: 100vh;
-                z-index: 200;
-                transition: right 0.3s ease;
-            }
-            
-            .mixer-panel.active {
-                right: 0;
-            }
-            
-            .mixer-toggle {
-                display: flex;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .studio-sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .studio-sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .studio-main {
-                margin-left: 0;
-            }
-            
-            .track-header {
-                width: 160px;
-            }
-            
-            .track-content {
-                left: 160px;
-            }
+        /* Тултипы */
+        .tooltip {
+            position: absolute;
+            background: rgba(20, 22, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: white;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.2s ease;
+            pointer-events: none;
         }
         
         /* Кастомный скролл */
@@ -756,6 +748,138 @@
             animation: slideInRight 0.3s ease;
             backdrop-filter: blur(10px);
         }
+        
+        /* Кнопка микшера */
+        .mixer-toggle {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .mixer-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1400px) {
+            .mixer-panel {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 200;
+                transition: right 0.3s ease;
+            }
+            
+            .mixer-panel.active {
+                right: 0;
+            }
+            
+            .mixer-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .studio-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .studio-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .studio-main {
+                margin-left: 0;
+            }
+            
+            .track-header {
+                width: 160px;
+            }
+            
+            .track-content {
+                left: 160px;
+            }
+            
+            .ai-panel {
+                width: calc(100% - 2rem);
+                right: 1rem;
+                left: 1rem;
+            }
+            
+            .transport {
+                padding: 0 1rem;
+                flex-wrap: wrap;
+                height: auto;
+                padding: 1rem;
+            }
+            
+            .time-display {
+                order: 3;
+                width: 100%;
+                margin-top: 1rem;
+                text-align: center;
+            }
+        }
+        
+        /* Плейсхолдер для дорожек */
+        .placeholder-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--track-height);
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Стили для индикаторов */
+        .meter {
+            width: 6px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .meter-level {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(to top, #10b981, #3b82f6);
+            border-radius: 3px;
+            transition: height 0.1s ease;
+        }
+        
+        /* Эффект сетки */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 200px;
+            right: 0;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="studio">
@@ -781,19 +905,19 @@
             <div style="margin-bottom: 2rem;">
                 <h3 style="font-size: 0.875rem; color: rgba(255,255,255,0.5); margin-bottom: 1rem; text-transform: uppercase;">Инструменты</h3>
                 <div style="display: grid; gap: 0.5rem;">
-                    <button class="toolbar-btn" data-tool="select">
+                    <button class="toolbar-btn active" data-tool="select" onclick="setTool('select')">
                         <i class="fas fa-mouse-pointer"></i>
                         <span>Выделение</span>
                     </button>
-                    <button class="toolbar-btn" data-tool="cut">
+                    <button class="toolbar-btn" data-tool="cut" onclick="setTool('cut')">
                         <i class="fas fa-cut"></i>
                         <span>Разрезать</span>
                     </button>
-                    <button class="toolbar-btn" data-tool="draw">
+                    <button class="toolbar-btn" data-tool="draw" onclick="setTool('draw')">
                         <i class="fas fa-pencil-alt"></i>
                         <span>Рисование</span>
                     </button>
-                    <button class="toolbar-btn" data-tool="automation">
+                    <button class="toolbar-btn" data-tool="automation" onclick="setTool('automation')">
                         <i class="fas fa-wave-square"></i>
                         <span>Автоматизация</span>
                     </button>
@@ -803,43 +927,32 @@
             <!-- Библиотека сэмплов -->
             <div style="margin-bottom: 2rem;">
                 <h3 style="font-size: 0.875rem; color: rgba(255,255,255,0.5); margin-bottom: 1rem; text-transform: uppercase;">Библиотека</h3>
-                <div class="sample-library">
-                    <div class="sample-item" data-sample="kick">
-                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Kick Drum</div>
-                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">808 • 120BPM</div>
-                    </div>
-                    <div class="sample-item" data-sample="snare">
-                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Snare</div>
-                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Acoustic • Dry</div>
-                    </div>
-                    <div class="sample-item" data-sample="hat">
-                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Hi-Hat</div>
-                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Closed • Tight</div>
-                    </div>
-                    <div class="sample-item" data-sample="bass">
-                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Bass Synth</div>
-                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Sub • 808</div>
-                    </div>
+                <div class="sample-library" id="sampleLibrary">
+                    <!-- Сэмплы будут добавлены через JS -->
                 </div>
+                <button class="toolbar-btn" style="width: 100%; margin-top: 1rem;" onclick="loadMoreSamples()">
+                    <i class="fas fa-plus"></i>
+                    <span>Загрузить еще</span>
+                </button>
             </div>
             
             <!-- Эффекты -->
             <div>
                 <h3 style="font-size: 0.875rem; color: rgba(255,255,255,0.5); margin-bottom: 1rem; text-transform: uppercase;">Эффекты</h3>
                 <div style="display: grid; gap: 0.5rem;">
-                    <button class="toolbar-btn" data-effect="reverb">
+                    <button class="toolbar-btn" data-effect="reverb" onclick="addEffect('reverb')">
                         <i class="fas fa-water"></i>
                         <span>Reverb</span>
                     </button>
-                    <button class="toolbar-btn" data-effect="delay">
+                    <button class="toolbar-btn" data-effect="delay" onclick="addEffect('delay')">
                         <i class="fas fa-redo-alt"></i>
                         <span>Delay</span>
                     </button>
-                    <button class="toolbar-btn" data-effect="compressor">
+                    <button class="toolbar-btn" data-effect="compressor" onclick="addEffect('compressor')">
                         <i class="fas fa-compress-arrows-alt"></i>
                         <span>Compressor</span>
                     </button>
-                    <button class="toolbar-btn" data-effect="eq">
+                    <button class="toolbar-btn" data-effect="eq" onclick="addEffect('eq')">
                         <i class="fas fa-chart-line"></i>
                         <span>EQ</span>
                     </button>
@@ -864,7 +977,7 @@
         <!-- Панель инструментов -->
         <div class="toolbar">
             <div class="toolbar-left">
-                <button class="toolbar-btn" id="menuToggle">
+                <button class="toolbar-btn" id="menuToggle" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </button>
                 
@@ -896,76 +1009,5 @@
             </div>
             
             <div class="toolbar-right">
-                <button class="toolbar-btn" onclick="toggleMixer()">
-                    <i class="fas fa-sliders-h"></i>
-                    <span>Микшер</span>
-                </button>
-                <button class="toolbar-btn" onclick="toggleAIPanel()">
-                    <i class="fas fa-robot"></i>
-                    <span>AI Помощник</span>
-                </button>
-                <button class="toolbar-btn" id="recordBtn" onclick="toggleRecording()">
-                    <i class="fas fa-circle"></i>
-                    <span>Запись</span>
-                </button>
-                <button class="toolbar-btn" onclick="exportProject()">
-                    <i class="fas fa-download"></i>
-                    <span>Экспорт</span>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Транспорт -->
-        <div class="transport">
-            <div class="transport-controls">
-                <button class="transport-btn" onclick="rewindToStart()">
-                    <i class="fas fa-step-backward"></i>
-                </button>
-                <button class="transport-btn" onclick="rewindBack()">
-                    <i class="fas fa-backward"></i>
-                </button>
-                <button class="play-btn transport-btn" id="playBtn" onclick="togglePlay()">
-                    <i class="fas fa-play"></i>
-                </button>
-                <button class="transport-btn" onclick="stopPlayback()">
-                    <i class="fas fa-stop"></i>
-                </button>
-                <button class="transport-btn" onclick="fastForward()">
-                    <i class="fas fa-forward"></i>
-                </button>
-            </div>
-            
-            <div class="time-display" id="timeDisplay">
-                00:00:000
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="font-size: 0.875rem; color: rgba(255,255,255,0.7);">BPM:</div>
-                <input type="number" id="bpmInput" value="120" min="60" max="240" 
-                       style="width: 80px; padding: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: white; font-family: 'JetBrains Mono';">
-            </div>
-        </div>
-        
-        <!-- Таймлайн и дорожки -->
-        <div class="timeline-section">
-            <div class="timeline-container" id="timeline">
-                <!-- Хедер таймлайна -->
-                <div class="timeline-header">
-                    <div class="track-header" style="background: transparent;">
-                        <div style="font-weight: 600; color: rgba(255,255,255,0.7);">Дорожки</div>
-                    </div>
-                    <div class="time-ruler" id="timeRuler">
-                        <!-- Временные метки будут добавлены через JS -->
-                    </div>
-                </div>
-                
-                <!-- Контейнер дорожек -->
-                <div class="tracks-container" id="tracksContainer">
-                    <!-- Дорожки будут добавлены через JS -->
-                </div>
-            </div>
-            
-            <!-- Панель микшера -->
-            <div class="mixer-panel" id="mixerPanel">
-                <div class="mixer-title">
-                    <i class="fas fa-sliders-h" style
+                <button class="toolbar-btn" onclick="toggleMixer()" id="mixerToggleBtn">
+```
