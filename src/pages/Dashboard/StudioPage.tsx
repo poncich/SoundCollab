@@ -902,4 +902,353 @@ const TrackControl = styled.button<{ active?: boolean }>`
   border: 1px solid ${props => props.active 
     ? 'rgba(239, 68, 68, 0.3)' 
     : 'var(--border-color)'};
-  color: ${props => props
+  color: ${props => props.active ? '#fca5a5' : 'var(--text-tertiary)'};
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const TrackVolume = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 60px;
+`;
+
+const VolumeSlider = styled.input`
+  width: 4px;
+  height: 60px;
+  appearance: slider-vertical;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+`;
+
+const VolumeValue = styled.span`
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+`;
+
+const TrackTimeline = styled.div`
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+`;
+
+const Clip = styled.div`
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: move;
+  user-select: none;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+`;
+
+const ClipContent = styled.div`
+  padding: 0.75rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ClipName = styled.div`
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+  color: white;
+`;
+
+const ClipWaveform = styled.div`
+  flex: 1;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  padding: 0.25rem;
+`;
+
+const WaveBar = styled.div<{ height: string }>`
+  flex: 1;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 1px;
+  min-height: 2px;
+  height: ${props => props.height};
+  animation: wave 1s ease-in-out infinite;
+`;
+
+const RightSidebar = styled.aside`
+  width: 280px;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+  padding: 1rem;
+`;
+
+const MixerSection = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const MixerChannels = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+`;
+
+const MixerChannel = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 60px;
+`;
+
+const ChannelHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+`;
+
+const ChannelName = styled.div`
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+`;
+
+const ChannelMute = styled.button<{ active?: boolean }>`
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  background: ${props => props.active 
+    ? 'rgba(239, 68, 68, 0.2)' 
+    : 'rgba(255, 255, 255, 0.05)'};
+  border: 1px solid ${props => props.active 
+    ? 'rgba(239, 68, 68, 0.3)' 
+    : 'var(--border-color)'};
+  color: ${props => props.active ? '#fca5a5' : 'var(--text-tertiary)'};
+  font-size: 0.625rem;
+  font-weight: 600;
+  cursor: pointer;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const FaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  height: 120px;
+`;
+
+const FaderTrack = styled.div`
+  width: 6px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  position: relative;
+`;
+
+const FaderHandle = styled.div`
+  position: absolute;
+  left: -9px;
+  width: 24px;
+  height: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: var(--radius-sm);
+  cursor: grab;
+  transition: box-shadow var(--transition-fast);
+  
+  &:hover {
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+const ChannelMeter = styled.div`
+  width: 4px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+`;
+
+const MeterLevel = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, #10b981, #3b82f6);
+  border-radius: var(--radius-full);
+  transition: height 0.1s ease;
+`;
+
+const ChannelPan = styled.div`
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MasterChannel = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+`;
+
+const MasterLabel = styled.div`
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const MasterFader = styled.div`
+  flex: 1;
+  height: 80px;
+`;
+
+const MasterMeter = styled(ChannelMeter)`
+  height: 80px;
+`;
+
+const SettingsSection = styled.div``;
+
+const SettingsGrid = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const SettingItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const SettingLabel = styled.div`
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+`;
+
+const SettingControl = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const BPMValue = styled.div`
+  min-width: 40px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-primary);
+`;
+
+const Select = styled.select`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+`;
+
+const StudioFooter = styled.footer`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+`;
+
+const FooterLeft = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const FooterCenter = styled.div``;
+
+const StatusIndicator = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const StatusDot = styled.div`
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+`;
+
+const StatusText = styled.span`
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+`;
+
+const FooterRight = styled.div`
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+`;
+
+const CPUUsage = styled.div``;
+const MemoryUsage = styled.div``;
+const Latency = styled.div``;
+
+export default StudioPage;
